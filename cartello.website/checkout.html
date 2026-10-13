@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Cartello Checkout</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    margin:0;
+    background:#f3f4f6;
+    color:#111827;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+    padding:25px;
+}
+
+.card{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    margin-bottom:20px;
+    box-shadow:0 4px 15px rgba(0,0,0,.06);
+}
+
+h1{
+    margin-bottom:20px;
+}
+
+label{
+    display:block;
+    font-weight:bold;
+    margin-top:15px;
+}
+
+input,
+textarea,
+select{
+    width:100%;
+    padding:12px;
+    margin-top:7px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:15px;
+}
+
+textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+.summary-item{
+    padding:12px 0;
+    border-bottom:1px solid #eee;
+}
+
+.total{
+    margin-top:20px;
+    border-top:2px solid #111827;
+    padding-top:15px;
+}
+
+.payment-box{
+    background:#f9fafb;
+    padding:20px;
+    border-radius:12px;
+    margin-top:15px;
+}
+
+.bank{
+    background:white;
+    padding:18px;
+    border-radius:10px;
+    border:1px solid #e5e7eb;
+}
+
+.bank p{
+    margin:8px 0;
+}
+
+.qr-section{
+    text-align:center;
+    margin-top:25px;
+    padding-top:20px;
+    border-top:1px solid #ddd;
+}
+
+.qr-section img{
+    width:260px;
+    max-width:100%;
+    border-radius:12px;
+    border:1px solid #ddd;
+    padding:10px;
+    background:white;
+}
+
+.qr-title{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.qr-note{
+    color:#6b7280;
+    font-size:14px;
+    margin-top:10px;
+    line-height:1.5;
+}
+
+.submit-btn{
+    width:100%;
+    padding:14px;
+    margin-top:20px;
+    background:#16a34a;
+    color:white;
+    border:0;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:bold;
+}
+
+.submit-btn:disabled{
+    background:#9ca3af;
+    cursor:not-allowed;
+}
+
+.back-btn{
+    background:#6b7280;
+    color:white;
+    border:0;
+    padding:10px 15px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.file-info{
+    color:#6b7280;
+    font-size:13px;
+    margin-top:7px;
+}
+
+.customer-info{
+    background:#f0fdf4;
+    border:1px solid #bbf7d0;
+    padding:12px;
+    border-radius:8px;
+    margin-bottom:15px;
+    color:#166534;
+}
+
+.error-box{
+    display:none;
+    background:#fee2e2;
+    color:#991b1b;
+    border:1px solid #fecaca;
+    padding:14px;
+    border-radius:8px;
+    margin-top:15px;
+    line-height:1.5;
+}
+
+.success-box{
+    display:none;
+    background:#dcfce7;
+    color:#166534;
+    border:1px solid #bbf7d0;
+    padding:14px;
+    border-radius:8px;
+    margin-top:15px;
+}
+
+@media(max-width:600px){
+
+    .container{
+        padding:12px;
+    }
+
+    .card{
+        padding:18px;
+    }
+
+    h1{
+        font-size:27px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<!-- HEADER -->
+
+<div class="card">
+
+    <button
+        class="back-btn"
+        onclick="goBack()">
+
+        ← Back to Store
+
+    </button>
+
+    <h1 style="margin-top:20px;">
+
+        🛒 Checkout
+
+    </h1>
+
+</div>
+
+
+
+<!-- ORDER SUMMARY -->
+
+<div class="card">
+
+    <h2>
+        Order Summary
+    </h2>
+
+    <div
+        id="orderItems"
+        style="margin-top:15px;">
+
+        Loading...
+
+    </div>
+
+
+    <div class="total">
+
+        <p>
+
+            Subtotal:
+            Rs.<span id="subtotal">0</span>/=
+
+        </p>
+
+        <p>
+
+            Delivery:
+            Rs.<span id="delivery">0</span>/=
+
+        </p>
+
+        <p id="codFeeRow" style="display:none;margin-top:10px;">
+            Cash on Delivery Fee:
+            Rs.<span id="codFee">0</span>/=
+        </p>
+
+        <h2 style="margin-top:10px;">
+
+            Total:
+            Rs.<span id="total">0</span>/=
+
+        </h2>
+
+    </div>
+
+</div>
+
+
+
+<!-- CUSTOMER DETAILS -->
+
+<div class="card">
+
+    <h2>
+        Customer Details
+    </h2>
+
+    <div
+        id="customerInfo"
+        class="customer-info">
+
+        Logged in customer
+
+    </div>
+
+
+    <label>
+        Full Name
+    </label>
+
+    <input
+        type="text"
+        id="name"
+        placeholder="Full Name">
+
+
+    <label>
+        Phone Number
+    </label>
+
+    <input
+        type="tel"
+        id="phone"
+        placeholder="07XXXXXXXX">
+
+
+    <label>
+        Email
+    </label>
+
+    <input
+        type="email"
+        id="email"
+        placeholder="your@email.com">
+
+
+    <label>
+        Delivery Address
+    </label>
+
+    <textarea
+        id="address"
+        placeholder="Full delivery address"></textarea>
+
+
+    <label>
+        District
+    </label>
+
+    <input
+        type="text"
+        id="district"
+        placeholder="District">
+
+</div>
+
+
+
+<!-- PAYMENT -->
+
+<div class="card">
+
+    <h2>
+        💳 Payment
+    </h2>
+
+
+    <label for="checkoutPaymentMethod" style="display:block;font-weight:700;margin:12px 0 6px;">Choose Payment Method</label>
+    <select id="checkoutPaymentMethod" onchange="changeCheckoutPaymentMethod()" style="width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:8px;font-size:16px;margin-bottom:12px;">
+        <option value="Deposit">Deposit / Bank Transfer</option>
+        <option value="COD">Cash on Delivery (+Rs.50)</option>
+    </select>
+
+    <div id="paymentMethodNotice" style="padding:12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;margin:12px 0;color:#1d4ed8;">
+        Choose a payment method for your order.
+    </div>
+
+    <div class="payment-box" id="depositPaymentBox">
+
+
+        <!-- BANK DETAILS -->
+
+        <div class="bank">
+
+            <h3>
+                🏦 Bank of Ceylon
+            </h3>
+
+            <p>
+                <strong>
+                    Account Name:
+                </strong>
+
+                KAMS KUMARA
+            </p>
+
+            <p>
+                <strong>
+                    Account Number:
+                </strong>
+
+                9844438
+            </p>
+
+            <p>
+                <strong>
+                    Branch:
+                </strong>
+
+                Ampara
+            </p>
+
+        </div>
+
+
+        <!-- QR -->
+
+        <div class="qr-section">
+
+            <div class="qr-title">
+
+                📱 Pay with LankaQR
+
+            </div>
+
+            <img
+                src="boc-lankaqr.png"
+                alt="BOC LankaQR"
+                onerror="this.style.display='none'; document.getElementById('qrError').style.display='block';">
+
+            <p
+                id="qrError"
+                style="
+                    display:none;
+                    color:#dc2626;
+                    margin-top:10px;
+                ">
+
+                QR image not found.
+                Please check that
+                <strong>boc-lankaqr.png</strong>
+                is in the website folder.
+
+            </p>
+
+            <p class="qr-note">
+
+                Scan the QR code using your
+                supported banking or payment app
+                and complete the payment.
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- PAYMENT DETAILS -->
+
+    <label id="paymentDetailsLabel">
+        Payment Details (Deposit only)
+    </label>
+
+    <textarea
+        id="paymentDetails"
+        placeholder="Enter bank transfer / LankaQR payment details (Deposit only)"></textarea>
+
+
+
+    <!-- PAYMENT SLIP -->
+
+    <label id="paymentSlipLabel">
+        Payment Slip (Deposit only)
+    </label>
+
+    <input
+        type="file"
+        id="paymentSlip"
+        accept=".jpg,.jpeg,.png,.webp,.pdf">
+
+
+    <p class="file-info" id="slipInfo">
+
+        JPG, PNG, WEBP or PDF.
+        Maximum 5MB.
+
+    </p>
+
+
+    <div
+        id="errorBox"
+        class="error-box">
+    </div>
+
+
+    <div
+        id="successBox"
+        class="success-box">
+    </div>
+
+
+    <button
+        class="submit-btn"
+        id="submitBtn"
+        onclick="submitOrder()">
+
+        Submit Order
+
+    </button>
+
+</div>
+
+
+</div>
+
+
+
+<script>
+
+
+/* ==========================================
+   GOOGLE APPS SCRIPT API
+========================================== */
+
+const API_URL =
+"https://script.google.com/macros/s/AKfycbzcKrEkPzSjuIzYhHgy3RAeJis_2Xzkz2qLyDH13A0Aty_KpISkYG96yc8NbydKuo2qkQ/exec";
+
+
+/* ==========================================
+   CLOUDINARY
+========================================== */
+
+const CLOUDINARY_URL =
+"https://api.cloudinary.com/v1_1/iovladnb/auto/upload";
+
+const CLOUDINARY_PRESET =
+"cartello_payment_slips";
+
+
+/* ==========================================
+   LOGIN CHECK
+========================================== */
+
+if(
+    localStorage.getItem("cartelloLoggedIn") !== "true" ||
+    localStorage.getItem("cartelloUserType") !== "customer"
+){
+
+    window.location.href = "./index.html";
+
+}
+
+
+/* ==========================================
+   CUSTOMER
+========================================== */
+
+let customer = {};
+
+try{
+
+    customer =
+        JSON.parse(
+            localStorage.getItem(
+                "cartelloCurrentCustomer"
+            ) || "{}"
+        );
+
+}catch(error){
+
+    console.error(
+        "Customer data error:",
+        error
+    );
+
+    customer = {};
+
+}
+
+
+/* ==========================================
+   CART
+========================================== */
+
+let cart = [];
+
+try{
+
+    cart =
+        JSON.parse(
+            localStorage.getItem(
+                "cartelloCart"
+            ) || "[]"
+        );
+    // Bubble Wrap and Bio Masterlist are deposit-only, including older saved carts.
+    cart = cart.map(function(item){
+        const productName = String(item.product || item.name || "").toLowerCase();
+        if(productName.includes("bubble wrap") || productName.includes("bio masterlist")){
+            item.paymentMethod = "Deposit";
+        }
+        return item;
+    });
+    localStorage.setItem("cartelloCart", JSON.stringify(cart));
+
+}catch(error){
+
+    console.error(
+        "Cart data error:",
+        error
+    );
+
+    cart = [];
+
+}
+
+
+/* ==========================================
+   DELIVERY
+========================================== */
+
+function calculateDelivery(items){
+
+    let delivery = 0;
+
+    let bioQty = 0;
+
+
+    items.forEach(function(item){
+
+        const productName =
+            String(
+                item.name ||
+                item.product ||
+                ""
+            ).toLowerCase();
+
+
+        const isBio =
+            productName.includes(
+                "bio masterlist"
+            );
+
+
+        if(isBio){
+
+            bioQty +=
+                Number(
+                    item.quantity
+                ) || 0;
+
+        }
+
+    });
+
+
+    if(bioQty === 1){
+
+        delivery += 200;
+
+    }
+
+    else if(bioQty === 2){
+
+        delivery += 350;
+
+    }
+
+    else if(bioQty >= 3){
+
+        delivery += 450;
+
+    }
+
+
+    items.forEach(function(item){
+
+        const productName =
+            String(
+                item.name ||
+                item.product ||
+                ""
+            ).toLowerCase();
+
+
+        const isBio =
+            productName.includes(
+                "bio masterlist"
+            );
+
+
+        if(!isBio){
+
+            delivery +=
+                (Number(item.deliveryFee) || 0) *
+                (Number(item.quantity) || 1);
+
+        }
+
+    });
+
+
+    return delivery;
+
+}
+
+
+function isBioItem(item){
+    return String(item.name || item.product || "").toLowerCase().includes("bio masterlist");
+}
+
+function isDepositOnlyItem(item){
+    const name = String(item.name || item.product || "").toLowerCase();
+    return name.includes("bio masterlist") || name.includes("bubble wrap");
+}
+
+function requiresDepositPayment(){
+    // Bio Masterlist is deposit-only. Any non-COD item also needs a deposit slip.
+    return cart.some(function(item){
+        return isDepositOnlyItem(item) || (item.paymentMethod || "Deposit") !== "COD";
+    });
+}
+
+function calculateCodFee(items){
+    return (items || []).some(function(item){
+        return !isDepositOnlyItem(item) && item.paymentMethod === "COD";
+    }) ? 50 : 0;
+}
+
+function getOrderPaymentMethod(){
+    const hasCOD = cart.some(function(item){
+        return !isDepositOnlyItem(item) && item.paymentMethod === "COD";
+    });
+    const hasDeposit = cart.some(function(item){
+        return isDepositOnlyItem(item) || (item.paymentMethod || "Deposit") !== "COD";
+    });
+    if(hasCOD && hasDeposit) return "Mixed";
+    if(hasCOD) return "COD";
+    return "Deposit";
+}
+
+function changeCheckoutPaymentMethod(){
+    const selector = document.getElementById("checkoutPaymentMethod");
+    if(!selector) return;
+    const hasDepositOnly = cart.some(isDepositOnlyItem);
+    if(hasDepositOnly){
+        selector.value = "Deposit";
+        selector.disabled = true;
+        cart = cart.map(function(item){ item.paymentMethod = "Deposit"; return item; });
+    } else {
+        selector.disabled = false;
+        const chosen = selector.value || "Deposit";
+        cart = cart.map(function(item){ item.paymentMethod = chosen; return item; });
+    }
+    localStorage.setItem("cartelloCart", JSON.stringify(cart));
+    loadSummary();
+}
+
+function updatePaymentUI(){
+    const selector = document.getElementById("checkoutPaymentMethod");
+    const hasDepositOnly = cart.some(isDepositOnlyItem);
+    if(selector){
+        selector.disabled = hasDepositOnly;
+        if(hasDepositOnly){
+            selector.value = "Deposit";
+            selector.options[1].disabled = true;
+        } else {
+            selector.options[1].disabled = false;
+            selector.value = cart.some(function(item){ return item.paymentMethod === "COD"; }) ? "COD" : "Deposit";
+        }
+    }
+    const needsDeposit = requiresDepositPayment();
+    const depositBox = document.getElementById("depositPaymentBox");
+    const detailsLabel = document.getElementById("paymentDetailsLabel");
+    const detailsInput = document.getElementById("paymentDetails");
+    const slipLabel = document.getElementById("paymentSlipLabel");
+    const slipInput = document.getElementById("paymentSlip");
+    const slipInfo = document.getElementById("slipInfo");
+    const notice = document.getElementById("paymentMethodNotice");
+
+    [depositBox, detailsLabel, detailsInput, slipLabel, slipInput, slipInfo].forEach(function(el){
+        if(el) el.style.display = needsDeposit ? "" : "none";
+    });
+
+    if(notice){
+        if(getOrderPaymentMethod() === "COD"){
+            notice.textContent = "Cash on Delivery selected. Pay when your order arrives. A one-time Rs.50 COD fee is included. No deposit slip is needed.";
+        } else if(getOrderPaymentMethod() === "Mixed"){
+            notice.textContent = "Your cart contains both COD and Deposit items. Rs.50 COD fee is included once, and a payment slip is required for Deposit / Bio Masterlist items.";
+        } else {
+            notice.textContent = "Deposit / Bank Transfer selected. Please complete the deposit and upload the payment slip.";
+        }
+    }
+}
+
+/* ==========================================
+   ESCAPE HTML
+========================================== */
+
+function escapeHTML(value){
+
+    return String(
+        value ?? ""
+    )
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+/* ==========================================
+   CUSTOMER INFO
+========================================== */
+
+function loadCustomerInfo(){
+
+    const info =
+        document.getElementById(
+            "customerInfo"
+        );
+
+
+    let text =
+        "Logged in customer";
+
+
+    if(customer.name){
+
+        text =
+            "Logged in as: " +
+            customer.name;
+
+    }
+
+
+    if(customer.username){
+
+        text +=
+            " (@" +
+            customer.username +
+            ")";
+
+    }
+
+
+    info.textContent =
+        text;
+
+
+    document.getElementById(
+        "name"
+    ).value =
+        customer.name || "";
+
+
+    document.getElementById(
+        "phone"
+    ).value =
+        customer.phone || "";
+
+
+    document.getElementById(
+        "email"
+    ).value =
+        customer.email || "";
+
+}
+
+
+/* ==========================================
+   ORDER SUMMARY
+========================================== */
+
+function loadSummary(){
+
+    const box =
+        document.getElementById(
+            "orderItems"
+        );
+
+
+    if(!cart.length){
+
+        box.innerHTML =
+            "<p>Your cart is empty.</p>";
+
+        document.getElementById(
+            "subtotal"
+        ).textContent = "0";
+
+        document.getElementById(
+            "delivery"
+        ).textContent = "0";
+
+        document.getElementById(
+            "total"
+        ).textContent = "0";
+
+        return;
+
+    }
+
+
+    let subtotal = 0;
+
+    let html = "";
+
+
+    cart.forEach(function(item){
+
+        const price =
+            Number(
+                item.price
+            ) || 0;
+
+
+        const quantity =
+            Number(
+                item.quantity
+            ) || 1;
+
+
+        const lineTotal =
+            price * quantity;
+
+
+        subtotal +=
+            lineTotal;
+
+
+        html += `
+
+            <div class="summary-item">
+
+                <strong>
+                    ${escapeHTML(
+                        item.name ||
+                        item.product ||
+                        "Product"
+                    )}
+                </strong>
+
+                <br>
+
+                ${
+                    item.medium
+                    ?
+                    `
+                    <small>
+                        Medium:
+                        ${escapeHTML(item.medium)}
+                    </small>
+
+                    <br>
+                    `
+                    :
+                    ""
+                }
+
+                Quantity:
+                ${quantity}
+
+                <br>
+
+                Payment:
+                ${isDepositOnlyItem(item) ? "Deposit / Bank Transfer (COD unavailable)" : ((item.paymentMethod || "Deposit") === "COD" ? "Cash on Delivery" : "Deposit / Bank Transfer")}
+
+                <br>
+
+                Rs.
+                ${lineTotal.toLocaleString()}
+                /=
+
+            </div>
+
+        `;
+
+    });
+
+
+    const delivery =
+        calculateDelivery(cart);
+
+
+    const codFee =
+        calculateCodFee(cart);
+
+    const total =
+        subtotal +
+        delivery +
+        codFee;
+
+
+    box.innerHTML =
+        html;
+
+
+    document.getElementById(
+        "subtotal"
+    ).textContent =
+        subtotal.toLocaleString();
+
+
+    document.getElementById(
+        "delivery"
+    ).textContent =
+        delivery.toLocaleString();
+
+
+    document.getElementById(
+        "total"
+    ).textContent =
+        total.toLocaleString();
+
+    document.getElementById("codFeeRow").style.display = codFee > 0 ? "block" : "none";
+    document.getElementById("codFee").textContent = codFee.toLocaleString();
+
+    updatePaymentUI();
+    loadCustomerInfo();
+
+}
+
+
+/* ==========================================
+   UPLOAD PAYMENT SLIP
+========================================== */
+
+async function uploadPaymentSlip(file){
+
+    const formData =
+        new FormData();
+
+
+    formData.append(
+        "file",
+        file
+    );
+
+
+    formData.append(
+        "upload_preset",
+        CLOUDINARY_PRESET
+    );
+
+
+    const response =
+        await fetch(
+            CLOUDINARY_URL,
+            {
+                method:"POST",
+                body:formData
+            }
+        );
+
+
+    let result;
+
+
+    try{
+
+        result =
+            await response.json();
+
+    }catch(error){
+
+        throw new Error(
+            "Cloudinary response could not be read."
+        );
+
+    }
+
+
+    if(!response.ok){
+
+        throw new Error(
+
+            result.error &&
+            result.error.message
+
+            ?
+
+            result.error.message
+
+            :
+
+            "Payment slip upload failed."
+
+        );
+
+    }
+
+
+    if(!result.secure_url){
+
+        throw new Error(
+            "Payment slip upload did not return a file URL."
+        );
+
+    }
+
+
+    return result;
+
+}
+
+
+/* ==========================================
+   SUBMIT ORDER
+========================================== */
+
+async function submitOrder(){
+
+    hideMessages();
+
+
+    if(!cart.length){
+
+        alert(
+            "Your cart is empty."
+        );
+
+        return;
+
+    }
+
+
+    const name =
+        document.getElementById(
+            "name"
+        ).value.trim();
+
+
+    const phone =
+        document.getElementById(
+            "phone"
+        ).value.trim();
+
+
+    const email =
+        document.getElementById(
+            "email"
+        ).value.trim();
+
+
+    const address =
+        document.getElementById(
+            "address"
+        ).value.trim();
+
+
+    const district =
+        document.getElementById(
+            "district"
+        ).value.trim();
+
+
+    const paymentDetails =
+        document.getElementById(
+            "paymentDetails"
+        ).value.trim();
+
+
+    const file =
+        document.getElementById(
+            "paymentSlip"
+        ).files[0];
+
+
+    /* ======================================
+       VALIDATION
+    ====================================== */
+
+    if(
+        !name ||
+        !phone ||
+        !email ||
+        !address ||
+        !district
+    ){
+
+        showError(
+            "Please fill all customer details."
+        );
+
+        return;
+
+    }
+
+
+    const needsDeposit = requiresDepositPayment();
+
+    if(needsDeposit && !file){
+        showError("Please upload a payment slip for Deposit / Bio Masterlist items.");
+        return;
+    }
+
+    if(needsDeposit && file && file.size > 5 * 1024 * 1024){
+        showError("Payment slip must be less than 5MB.");
+        return;
+    }
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
+
+    if(needsDeposit && file && !allowedTypes.includes(file.type)){
+        showError("Only JPG, PNG, WEBP or PDF files are allowed.");
+        return;
+    }
+
+
+    const btn =
+        document.getElementById(
+            "submitBtn"
+        );
+
+
+    btn.disabled = true;
+
+
+    try{
+
+
+        /* ======================================
+           STEP 1 - CLOUDINARY (Deposit only)
+        ====================================== */
+
+        let upload = {};
+
+        if(needsDeposit){
+            btn.textContent = "Uploading Payment Slip...";
+            upload = await uploadPaymentSlip(file);
+            console.log("Cloudinary upload successful:", upload.secure_url);
+        }
+
+
+        /* ======================================
+           STEP 2 - CALCULATE TOTAL
+        ====================================== */
+
+        let subtotal = 0;
+
+
+        cart.forEach(function(item){
+
+            subtotal +=
+
+                (
+                    Number(
+                        item.price
+                    ) || 0
+                )
+
+                *
+
+                (
+                    Number(
+                        item.quantity
+                    ) || 1
+                );
+
+        });
+
+
+        const delivery =
+            calculateDelivery(cart);
+
+        const codFee =
+            calculateCodFee(cart);
+
+        const total =
+            subtotal +
+            delivery +
+            codFee;
+
+
+        /* ======================================
+           STEP 3 - ORDER ID
+        ====================================== */
+
+        const orderId =
+            "CT" +
+            Date.now();
+
+
+        /* ======================================
+           STEP 4 - CUSTOMER ID
+        ====================================== */
+
+        const customerId =
+            customer.customerId ||
+            "";
+
+
+        const customerUsername =
+            customer.username ||
+            "";
+
+
+        /* ======================================
+           STEP 5 - ORDER DATA
+        ====================================== */
+
+        const data = {
+
+            action:
+                "newOrder",
+
+            orderId:
+                orderId,
+
+            name:
+                name,
+
+            phone:
+                phone,
+
+            email:
+                email,
+
+            address:
+                address,
+
+            district:
+                district,
+
+            items:
+                cart,
+
+            subtotal:
+                subtotal,
+
+            delivery:
+                delivery,
+
+            codFee:
+                codFee,
+
+            paymentMethod:
+                getOrderPaymentMethod(),
+
+            total:
+                total,
+
+            paymentSlipURL:
+                upload.secure_url || "",
+
+            paymentSlipName:
+                file ? file.name : "",
+
+            paymentSlipPublicId:
+                upload.public_id || "",
+
+            paymentSlipResourceType:
+                upload.resource_type || "",
+
+            paymentSlipFormat:
+                upload.format || "",
+
+            paymentDetails:
+                paymentDetails,
+
+            status:
+                getOrderPaymentMethod() === "COD" ? "COD Pending" : "Payment Pending",
+
+            customerId:
+                customerId,
+
+            customerUsername:
+                customerUsername
+
+        };
+
+
+        console.log(
+            "Order data:",
+            data
+        );
+
+
+        /* ======================================
+           STEP 6 - GOOGLE SHEETS
+        ====================================== */
+
+        btn.textContent =
+            "Submitting Order...";
+
+
+        const response =
+            await fetch(
+                API_URL,
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "text/plain;charset=utf-8"
+                    },
+
+                    body:
+                        JSON.stringify(data),
+
+                    redirect:"follow"
+                }
+            );
+
+
+        console.log(
+            "Google response status:",
+            response.status
+        );
+
+
+        let result;
+
+
+        try{
+
+            result =
+                await response.json();
+
+        }catch(error){
+
+            throw new Error(
+                "Google Apps Script did not return a valid response."
+            );
+
+        }
+
+
+        console.log(
+            "Google Sheets result:",
+            result
+        );
+
+
+        if(
+            !result ||
+            result.success !== true
+        ){
+
+            throw new Error(
+
+                result &&
+                result.message
+
+                ?
+
+                result.message
+
+                :
+
+                "Order could not be saved."
+
+            );
+
+        }
+
+
+        /* ======================================
+           STEP 7 - SAVE ORDER LOCALLY
+        ====================================== */
+
+        const savedOrder = {
+
+            ...data,
+
+            orderId:
+                result.orderId ||
+                orderId
+
+        };
+
+
+        localStorage.setItem(
+
+            "cartelloLastOrder",
+
+            JSON.stringify(
+                savedOrder
+            )
+
+        );
+
+
+        localStorage.setItem(
+
+            "cartelloOrder",
+
+            JSON.stringify(
+                savedOrder
+            )
+
+        );
+
+
+        /* ======================================
+           STEP 8 - SAVE ORDER HISTORY
+        ====================================== */
+
+        try{
+
+            const oldOrders =
+                JSON.parse(
+                    localStorage.getItem(
+                        "cartelloCustomerOrders"
+                    ) || "[]"
+                );
+
+
+            const updatedOrders = [
+
+                savedOrder,
+
+                ...oldOrders
+
+            ];
+
+
+            localStorage.setItem(
+
+                "cartelloCustomerOrders",
+
+                JSON.stringify(
+                    updatedOrders
+                )
+
+            );
+
+        }catch(error){
+
+            console.log(
+                "Order history local save skipped."
+            );
+
+        }
+
+
+        /* ======================================
+           STEP 9 - CLEAR CART
+        ====================================== */
+
+        localStorage.removeItem(
+            "cartelloCart"
+        );
+
+
+        /* ======================================
+           STEP 10 - PAYMENT PENDING
+        ====================================== */
+
+        btn.textContent =
+            "Order Submitted ✓";
+
+
+        window.location.href =
+            "./payment-pending.html";
+
+    }
+
+
+    catch(error){
+
+        console.error(
+            "ORDER SUBMISSION ERROR:",
+            error
+        );
+
+
+        let message =
+            error.message ||
+            "Unknown error";
+
+
+        /*
+           Special message for network/fetch error
+        */
+
+        if(
+            message.toLowerCase()
+                .includes("failed to fetch")
+        ){
+
+            message =
+                "Could not connect to the order server. " +
+                "Please check the Google Apps Script Web App deployment.";
+
+        }
+
+
+        showError(
+            "Order submission failed: " +
+            message
+        );
+
+
+        btn.disabled = false;
+
+        btn.textContent =
+            "Submit Order";
+
+    }
+
+}
+
+
+/* ==========================================
+   ERROR MESSAGE
+========================================== */
+
+function showError(message){
+
+    const box =
+        document.getElementById(
+            "errorBox"
+        );
+
+
+    box.textContent =
+        message;
+
+
+    box.style.display =
+        "block";
+
+}
+
+
+/* ==========================================
+   HIDE MESSAGES
+========================================== */
+
+function hideMessages(){
+
+    document.getElementById(
+        "errorBox"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "successBox"
+    ).style.display =
+        "none";
+
+}
+
+
+/* ==========================================
+   BACK
+========================================== */
+
+function goBack(){
+
+    window.location.href =
+        "./home.html";
+
+}
+
+
+/* ==========================================
+   START
+========================================== */
+
+window.addEventListener(
+    "load",
+    function(){
+
+        loadSummary();
+
+    }
+);
+
+</script>
+
+</body>
+
+</html>

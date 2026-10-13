@@ -1,0 +1,241 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Pending - Cartello</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+    font-family:Arial,sans-serif;background:#f5f7fb;
+    min-height:100vh;display:flex;justify-content:center;
+    align-items:center;padding:20px;color:#222
+}
+.container{width:100%;max-width:650px}
+.card{
+    background:#fff;border-radius:18px;padding:40px 30px;
+    text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.1)
+}
+.icon{
+    width:80px;height:80px;border-radius:50%;background:#fff3cd;
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 20px;font-size:42px
+}
+h1{font-size:32px;margin-bottom:12px}
+.subtitle{color:#666;font-size:16px;margin-bottom:25px}
+.status{
+    background:#fff3cd;color:#856404;padding:14px;
+    border-radius:10px;font-weight:bold;margin-bottom:25px
+}
+.order-box{
+    background:#f7f8fa;border-radius:12px;padding:20px;
+    text-align:left;margin-bottom:25px
+}
+.row{
+    display:flex;justify-content:space-between;gap:15px;
+    padding:10px 0;border-bottom:1px solid #ddd
+}
+.row:last-child{border-bottom:none}
+.label{font-weight:bold}
+.value{text-align:right;overflow-wrap:anywhere}
+.total{font-size:20px;font-weight:bold;color:#111}
+.buttons{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+button{
+    border:none;padding:13px 20px;border-radius:9px;
+    font-size:15px;font-weight:bold;cursor:pointer
+}
+.check-btn{background:#2196f3;color:white}
+.shop-btn{background:#111;color:white}
+.message{color:#777;font-size:14px;margin-top:25px;line-height:1.6}
+.error{
+    display:none;background:#fee2e2;color:#991b1b;
+    padding:14px;border-radius:10px;margin-bottom:20px;
+    line-height:1.5
+}
+@media(max-width:500px){
+    .card{padding:28px 18px}
+    h1{font-size:27px}
+    .row{flex-direction:column;gap:5px}
+    .value{text-align:left}
+    button{width:100%}
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+<div class="card">
+
+    <div class="icon">⏳</div>
+    <h1 id="pageTitle">Payment Pending</h1>
+    <p class="subtitle" id="subtitle">
+        Your order information is loading.
+    </p>
+
+    <div class="status" id="status">
+        ⏳ Payment is waiting for verification
+    </div>
+
+    <div class="error" id="errorBox"></div>
+
+    <div class="order-box" id="orderBox">
+        <div class="row">
+            <span class="label">Order ID</span>
+            <span class="value" id="orderId">-</span>
+        </div>
+        <div class="row">
+            <span class="label">Name</span>
+            <span class="value" id="customerName">-</span>
+        </div>
+        <div class="row">
+            <span class="label">Product</span>
+            <span class="value" id="product">-</span>
+        </div>
+        <div class="row">
+            <span class="label">Quantity</span>
+            <span class="value" id="quantity">-</span>
+        </div>
+        <div class="row">
+            <span class="label">Subtotal</span>
+            <span class="value" id="subtotal">-</span>
+        </div>
+        <div class="row">
+            <span class="label">Delivery</span>
+            <span class="value" id="delivery">-</span>
+        </div>
+        <div class="row">
+            <span class="label">Total</span>
+            <span class="value total" id="total">-</span>
+        </div>
+    </div>
+
+    <div class="buttons">
+        <button class="check-btn" onclick="goToDashboard()">
+            🔄 Check Payment Status
+        </button>
+        <button class="shop-btn" onclick="continueShopping()">
+            🛍️ Continue Shopping
+        </button>
+    </div>
+
+    <p class="message">
+        Your payment will be checked by our team.
+        You can check your orders from My Account.
+    </p>
+</div>
+</div>
+
+<script>
+function readOrder(key){
+    try{
+        const raw = localStorage.getItem(key);
+        if(!raw) return null;
+        const data = JSON.parse(raw);
+        return data && typeof data === "object" ? data : null;
+    }catch(error){
+        console.error("Cannot read", key, error);
+        return null;
+    }
+}
+
+function getOrder(){
+    // Prefer the most recently submitted order.
+    const last = readOrder("cartelloLastOrder");
+    const saved = readOrder("cartelloOrder");
+    const old = readOrder("customerOrder");
+
+    // Prefer a usable order with an ID and an actual total.
+    const candidates = [last, saved, old].filter(Boolean);
+
+    return candidates.find(o =>
+        (o.orderId || o.id) &&
+        (o.total !== undefined || o.subtotal !== undefined)
+    ) || candidates.find(o => o.orderId || o.id) || null;
+}
+
+function money(value){
+    const amount = Number(value);
+    if(!Number.isFinite(amount)) return "-";
+    return "Rs. " + amount.toLocaleString("en-LK") + "/=";
+}
+
+function showError(message){
+    const box = document.getElementById("errorBox");
+    box.textContent = message;
+    box.style.display = "block";
+}
+
+function loadOrder(){
+    const order = getOrder();
+
+    if(!order){
+        document.getElementById("pageTitle").textContent =
+            "Order Information Unavailable";
+        document.getElementById("subtitle").textContent =
+            "We could not find saved order details on this browser.";
+        document.getElementById("status").textContent =
+            "Please open My Account to check your order history.";
+        document.getElementById("orderBox").style.display = "none";
+
+        showError(
+            "No saved order was found. If you submitted an order, " +
+            "check My Account or contact Cartello before submitting again."
+        );
+        return;
+    }
+
+    const orderId = order.orderId || order.id || "-";
+    const name = order.name || order.customerName || "-";
+    const items = Array.isArray(order.items) ? order.items : [];
+
+    const product = order.product ||
+        (items.length
+            ? items.map(item => item.name || item.product || "Product").join(", ")
+            : "-");
+
+    const quantity = order.quantity !== undefined
+        ? Number(order.quantity)
+        : items.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
+
+    const subtotalValue = order.subtotal !== undefined
+        ? Number(order.subtotal)
+        : items.reduce((sum, item) =>
+            sum + ((Number(item.price) || 0) * (Number(item.quantity) || 1)), 0);
+
+    const deliveryValue = order.delivery !== undefined
+        ? Number(order.delivery)
+        : 0;
+
+    // Use the actual saved order total when available.
+    const totalValue = order.total !== undefined && order.total !== null
+        ? Number(order.total)
+        : subtotalValue + deliveryValue;
+
+    document.getElementById("orderId").textContent = orderId;
+    document.getElementById("customerName").textContent = name;
+    document.getElementById("product").textContent = product;
+    document.getElementById("quantity").textContent =
+        Number.isFinite(quantity) ? String(quantity) : "-";
+    document.getElementById("subtotal").textContent = money(subtotalValue);
+    document.getElementById("delivery").textContent = money(deliveryValue);
+    document.getElementById("total").textContent = money(totalValue);
+
+    const status = order.status || "Payment Pending";
+    document.getElementById("status").textContent =
+        "Payment status: " + status;
+}
+
+function goToDashboard(){
+    window.location.href = "./customer-dashboard.html";
+}
+
+function continueShopping(){
+    window.location.href = "./home.html";
+}
+
+window.addEventListener("DOMContentLoaded", loadOrder);
+</script>
+</body>
+</html>

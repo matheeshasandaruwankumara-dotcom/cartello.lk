@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cartello Login</title>
+
+<style>
+:root{--navy:#17152f;--purple:#7357ff;--pink:#ff4f9a;--cyan:#34d7e8;--ink:#20203a;--muted:#777892}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial,Helvetica,sans-serif}
+body{min-height:100vh;display:flex;justify-content:center;align-items:center;position:relative;overflow-x:hidden;overflow-y:auto;padding:30px 16px;background:linear-gradient(-45deg,#10142e,#42277c,#a52f78,#176e8c);background-size:400% 400%;animation:bgShift 14s ease infinite;color:var(--ink)}
+body:before,body:after{content:"";position:fixed;border-radius:50%;filter:blur(2px);pointer-events:none;z-index:0;opacity:.62}
+body:before{width:340px;height:340px;left:-90px;top:-80px;background:radial-gradient(circle at 35% 35%,#ff79bd,rgba(255,79,154,.05) 70%);animation:floatOne 10s ease-in-out infinite}
+body:after{width:420px;height:420px;right:-130px;bottom:-140px;background:radial-gradient(circle at 40% 40%,#51e9f0,rgba(52,215,232,.04) 70%);animation:floatTwo 12s ease-in-out infinite}
+.ambient{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.ambient span{position:absolute;display:block;border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.07);backdrop-filter:blur(2px);border-radius:22px;animation:drift 15s linear infinite}
+.ambient span:nth-child(1){width:65px;height:65px;left:9%;top:20%;transform:rotate(25deg)}
+.ambient span:nth-child(2){width:32px;height:32px;left:17%;bottom:14%;border-radius:50%;animation-delay:-5s}
+.ambient span:nth-child(3){width:88px;height:88px;right:12%;top:15%;transform:rotate(35deg);animation-delay:-8s}
+.ambient span:nth-child(4){width:48px;height:48px;right:20%;bottom:17%;border-radius:50%;animation-delay:-3s}
+.login-box{position:relative;z-index:1;width:100%;max-width:440px;padding:32px;background:rgba(255,255,255,.94);border:1px solid rgba(255,255,255,.75);border-radius:28px;box-shadow:0 28px 90px rgba(7,9,35,.38);backdrop-filter:blur(18px);animation:cardIn .75s cubic-bezier(.2,.8,.2,1) both;overflow:hidden}
+.login-box:before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:linear-gradient(90deg,var(--cyan),var(--purple),var(--pink),#ffbd59);background-size:200% 100%;animation:shine 5s linear infinite}
+.brand-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px}
+.brand-logo{width:54px;height:54px;object-fit:contain;border-radius:15px;background:white;box-shadow:0 5px 18px rgba(70,65,140,.14);padding:3px}
+.logo{font-size:29px;font-weight:900;letter-spacing:3px;background:linear-gradient(100deg,#34206e,#6b48f5,#d63b91);-webkit-background-clip:text;background-clip:text;color:transparent}
+.tagline{text-align:center;color:var(--muted);font-size:13px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;margin-bottom:13px}
+.welcome{text-align:center;color:#72728d;line-height:1.55;font-size:14px;margin-bottom:24px}
+.tabs{display:flex;gap:5px;padding:5px;border-radius:14px;background:#f0eff9;margin-bottom:23px}
+.tab{flex:1;padding:12px 8px;border:0;border-radius:10px;background:transparent;font-weight:800;font-size:12px;letter-spacing:.6px;cursor:pointer;color:#85839f;transition:all .25s ease}
+.tab.active{color:white;background:linear-gradient(110deg,#6e4bfa,#a23ce2);box-shadow:0 7px 18px rgba(111,75,250,.3)}
+.form{display:none;animation:formIn .35s ease both}.form.active{display:block}
+.input-box{margin-bottom:15px}.input-box label{display:block;margin-bottom:7px;font-weight:750;font-size:13px;color:#41405f}
+.input-box input{width:100%;padding:13px 14px;border:1px solid #deddec;border-radius:12px;font-size:15px;color:#25243f;background:rgba(255,255,255,.9);outline:none;transition:border-color .2s,box-shadow .2s,transform .2s}
+.input-box input::placeholder{color:#a4a3b8}.input-box input:focus{border-color:#8166ff;box-shadow:0 0 0 4px rgba(129,102,255,.13);transform:translateY(-1px)}
+.login-btn{width:100%;padding:14px;border:0;border-radius:12px;background:linear-gradient(105deg,#6c4bf5,#a13fe0 55%,#e4499b);background-size:160% 100%;color:white;font-size:15px;font-weight:800;letter-spacing:.5px;cursor:pointer;box-shadow:0 9px 20px rgba(116,69,230,.25);transition:transform .2s,box-shadow .2s,background-position .3s}
+.login-btn:hover{transform:translateY(-2px);box-shadow:0 13px 25px rgba(116,69,230,.34);background-position:100% 0}.login-btn:active{transform:scale(.985)}
+.message{text-align:center;margin-top:14px;font-weight:700;min-height:20px;font-size:13px;line-height:1.5}
+.secure-note{display:flex;align-items:center;justify-content:center;gap:7px;color:#8988a0;font-size:11px;margin-top:19px}.secure-note span{color:#23a785;font-size:14px}
+@keyframes bgShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes cardIn{from{opacity:0;transform:translateY(25px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes formIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@keyframes floatOne{0%,100%{transform:translate(0,0)}50%{transform:translate(35px,30px)}}
+@keyframes floatTwo{0%,100%{transform:translate(0,0)}50%{transform:translate(-35px,-25px)}}
+@keyframes drift{0%{translate:0 0;rotate:0deg}50%{translate:20px -28px;rotate:20deg}100%{translate:0 0;rotate:0deg}}
+@keyframes shine{to{background-position:200% 0}}
+@media(max-width:480px){body{padding:18px 12px;align-items:flex-start}.login-box{margin:auto 0;padding:27px 21px;border-radius:23px}.brand-logo{width:47px;height:47px}.logo{font-size:25px;letter-spacing:2px}.welcome{font-size:13px}.ambient span:nth-child(1){left:2%}.ambient span:nth-child(3){right:2%}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+</style>
+</head>
+
+<body>
+
+<div class="ambient" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+
+<div class="login-box">
+
+    <div class="brand-row">
+        <img src="cartello-logo.png" class="brand-logo" alt="Cartello logo" onerror="this.style.display='none'">
+        <div class="logo">CARTELLO</div>
+    </div>
+    <div class="tagline">Your trusted online store</div>
+
+    <p class="welcome">
+        Welcome! Please login or create an account.
+    </p>
+
+    <!-- TABS -->
+    <div class="tabs">
+
+        <button
+            type="button"
+            class="tab active"
+            id="loginTab"
+            onclick="showLogin()">
+            LOGIN
+        </button>
+
+        <button
+            type="button"
+            class="tab"
+            id="signupTab"
+            onclick="showSignup()">
+            CREATE ACCOUNT
+        </button>
+
+    </div>
+
+
+    <!-- LOGIN -->
+
+    <div id="loginForm" class="form active">
+
+        <form id="cartelloLoginForm">
+
+            <div class="input-box">
+
+                <label>Username</label>
+
+                <input
+                    type="text"
+                    id="username"
+                    placeholder="Enter username"
+                    required>
+
+            </div>
+
+
+            <div class="input-box">
+
+                <label>Password</label>
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter password"
+                    required>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="login-btn">
+
+                LOGIN
+
+            </button>
+
+        </form>
+
+        <p id="loginMessage" class="message"></p>
+
+    </div>
+
+
+    <!-- CREATE ACCOUNT -->
+
+    <div id="signupForm" class="form">
+
+        <form onsubmit="createAccount(event)">
+
+            <div class="input-box">
+
+                <label>Full Name</label>
+
+                <input
+                    type="text"
+                    id="fullName"
+                    placeholder="Enter full name"
+                    required>
+
+            </div>
+
+
+            <div class="input-box">
+
+                <label>Username</label>
+
+                <input
+                    type="text"
+                    id="newUsername"
+                    placeholder="Create username"
+                    required>
+
+            </div>
+
+
+            <div class="input-box">
+
+                <label>Phone Number</label>
+
+                <input
+                    type="tel"
+                    id="phone"
+                    placeholder="Enter phone number"
+                    required>
+
+            </div>
+
+
+            <div class="input-box">
+
+                <label>Password</label>
+
+                <input
+                    type="password"
+                    id="newPassword"
+                    placeholder="Create password"
+                    minlength="6"
+                    required>
+
+            </div>
+
+
+            <div class="input-box">
+
+                <label>Confirm Password</label>
+
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    placeholder="Confirm password"
+                    minlength="6"
+                    required>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="login-btn">
+
+                CREATE ACCOUNT
+
+            </button>
+
+        </form>
+
+        <p id="signupMessage" class="message"></p>
+
+    </div>
+
+    <div class="secure-note"><span>✦</span> Simple shopping · Secure account access</div>
+</div>
+
+
+<script>
+// Explicitly bind the login form so the button works even if inline handlers are blocked.
+document.addEventListener("DOMContentLoaded", function () {
+    const loginFormElement = document.getElementById("cartelloLoginForm");
+    if (loginFormElement) {
+        loginFormElement.addEventListener("submit", login);
+    }
+});
+
+/* ============================
+   SHOW LOGIN
+============================ */
+
+function showLogin() {
+
+    document.getElementById("loginForm")
+        .classList.add("active");
+
+    document.getElementById("signupForm")
+        .classList.remove("active");
+
+    document.getElementById("loginTab")
+        .classList.add("active");
+
+    document.getElementById("signupTab")
+        .classList.remove("active");
+}
+
+
+/* ============================
+   SHOW SIGNUP
+============================ */
+
+function showSignup() {
+
+    document.getElementById("signupForm")
+        .classList.add("active");
+
+    document.getElementById("loginForm")
+        .classList.remove("active");
+
+    document.getElementById("signupTab")
+        .classList.add("active");
+
+    document.getElementById("loginTab")
+        .classList.remove("active");
+}
+
+
+/* ============================
+   CREATE ACCOUNT
+============================ */
+
+function createAccount(event) {
+
+    event.preventDefault();
+
+    const name =
+        document.getElementById("fullName").value.trim();
+
+    const username =
+        document.getElementById("newUsername").value.trim().toLowerCase();
+
+    const phone =
+        document.getElementById("phone").value.trim();
+
+    const password =
+        document.getElementById("newPassword").value;
+
+    const confirmPassword =
+        document.getElementById("confirmPassword").value;
+
+    const message =
+        document.getElementById("signupMessage");
+
+
+    if (password.length < 6) {
+
+        message.style.color = "red";
+        message.innerText =
+            "Password must be at least 6 characters.";
+
+        return;
+    }
+
+
+    if (password !== confirmPassword) {
+
+        message.style.color = "red";
+        message.innerText =
+            "Passwords do not match.";
+
+        return;
+    }
+
+
+    /*
+       Get existing customers
+    */
+
+    let customers =
+        JSON.parse(
+            localStorage.getItem("cartelloCustomers") || "[]"
+        );
+
+
+    /*
+       Check username
+    */
+
+    const exists =
+        customers.some(function(customer) {
+
+            return customer.username === username;
+
+        });
+
+
+    if (exists) {
+
+        message.style.color = "red";
+        message.innerText =
+            "Username already exists.";
+
+        return;
+    }
+
+
+    /*
+       Create account
+    */
+
+    const customer = {
+
+        id: "CUS" + Date.now(),
+
+        name: name,
+
+        username: username,
+
+        phone: phone,
+
+        password: password
+
+    };
+
+
+    customers.push(customer);
+
+
+    localStorage.setItem(
+        "cartelloCustomers",
+        JSON.stringify(customers)
+    );
+
+
+    /*
+       Success
+    */
+
+    message.style.color = "green";
+
+    message.innerText =
+        "Account created successfully!";
+
+
+    /*
+       Clear signup form
+    */
+
+    document.getElementById("fullName").value = "";
+    document.getElementById("newUsername").value = "";
+    document.getElementById("phone").value = "";
+    document.getElementById("newPassword").value = "";
+    document.getElementById("confirmPassword").value = "";
+
+
+    /*
+       Go login
+    */
+
+    setTimeout(function() {
+
+        showLogin();
+
+        document.getElementById("username").value =
+            username;
+
+    }, 1000);
+
+}
+
+
+/* ============================
+   LOGIN
+============================ */
+
+function login(event) {
+
+    event.preventDefault();
+
+
+    const username =
+        document.getElementById("username")
+        .value
+        .trim()
+        .toLowerCase();
+
+
+    const password =
+        document.getElementById("password")
+        .value;
+
+
+    const message =
+        document.getElementById("loginMessage");
+
+
+    /*
+       ADMIN LOGIN
+    */
+
+    if (
+        username === "nc2006" &&
+        password === "20060921#Nn"
+    ) {
+
+        message.style.color = "green";
+
+        message.innerText =
+            "Admin login successful!";
+
+
+        localStorage.setItem(
+            "cartelloLoggedIn",
+            "true"
+        );
+
+        localStorage.setItem(
+            "cartelloUserType",
+            "admin"
+        );
+
+
+        // Save the admin session, then navigate to the site's root admin page.
+        localStorage.setItem("cartelloAdminLoggedIn", "true");
+        message.innerText = "Admin login successful! Opening dashboard...";
+        window.setTimeout(function () {
+            window.location.replace(window.location.origin + "/admin.html");
+        }, 250);
+        return;
+    }
+
+
+    /*
+       CUSTOMER ACCOUNTS
+    */
+
+    const customers =
+        JSON.parse(
+            localStorage.getItem("cartelloCustomers") || "[]"
+        );
+
+
+    const customer =
+        customers.find(function(item) {
+
+            return (
+                item.username === username &&
+                item.password === password
+            );
+
+        });
+
+
+    /*
+       CUSTOMER LOGIN SUCCESS
+    */
+
+    if (customer) {
+
+        message.style.color = "green";
+
+        message.innerText =
+            "Login successful!";
+
+
+        localStorage.setItem(
+            "cartelloLoggedIn",
+            "true"
+        );
+
+
+        localStorage.setItem(
+            "cartelloUserType",
+            "customer"
+        );
+
+
+        localStorage.setItem(
+            "cartelloCurrentCustomer",
+            JSON.stringify(customer)
+        );
+
+
+        setTimeout(function() {
+
+            window.location.href = "home.html";
+
+        }, 700);
+
+        return;
+    }
+
+
+    /*
+       WRONG LOGIN
+    */
+
+    message.style.color = "red";
+
+    message.innerText =
+        "Invalid username or password.";
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2434 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cartello - Home</title>
+
+<style>
+
+/* =========================
+   RESET
+========================= */
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f6f8;
+    color:#222;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+header{
+    background:#111;
+    color:white;
+    padding:12px 20px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+.header-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.logo{
+    width:45px;
+    height:45px;
+    object-fit:contain;
+    background:white;
+    border-radius:8px;
+}
+
+.brand{
+    font-size:22px;
+    font-weight:bold;
+}
+
+.header-buttons{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.header-buttons button{
+    border:none;
+    padding:10px 14px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+    font-size:14px;
+}
+
+.dashboard-btn{
+    background:#0d6efd;
+    color:white;
+}
+
+.dashboard-btn:hover{
+    background:#0b5ed7;
+}
+
+.cart-btn{
+    background:white;
+    color:#111;
+}
+
+.logout-btn{
+    background:#e53935;
+    color:white;
+}
+
+
+/* =========================
+   WELCOME POPUP
+========================= */
+
+#welcomeOverlay{
+    position:fixed;
+    inset:0;
+
+    background:rgba(0,0,0,.75);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    z-index:5000;
+
+    opacity:0;
+    visibility:hidden;
+
+    transition:
+        opacity .4s ease,
+        visibility .4s ease;
+}
+
+#welcomeOverlay.show{
+    opacity:1;
+    visibility:visible;
+}
+
+.welcome-box{
+    width:90%;
+    max-width:450px;
+
+    background:white;
+    border-radius:20px;
+
+    padding:35px 25px;
+
+    text-align:center;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.3);
+
+    transform:scale(.85);
+
+    transition:
+        transform .4s ease;
+}
+
+#welcomeOverlay.show .welcome-box{
+    transform:scale(1);
+}
+
+.welcome-logo{
+    width:90px;
+    height:90px;
+    object-fit:contain;
+
+    background:white;
+
+    border-radius:15px;
+
+    margin-bottom:15px;
+}
+
+.welcome-box h1{
+    font-size:28px;
+    margin-bottom:10px;
+}
+
+.welcome-box p{
+    color:#666;
+    line-height:1.6;
+    margin-bottom:25px;
+}
+
+.continue-btn{
+    width:100%;
+
+    border:none;
+
+    background:#111;
+    color:white;
+
+    padding:13px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-size:16px;
+    font-weight:bold;
+}
+
+.continue-btn:hover{
+    background:#333;
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+    width:95%;
+    max-width:1100px;
+
+    margin:25px auto;
+
+    background:linear-gradient(
+        135deg,
+        #111,
+        #333
+    );
+
+    color:white;
+
+    border-radius:18px;
+
+    padding:45px 30px;
+
+    text-align:center;
+}
+
+.hero h1{
+    font-size:36px;
+    margin-bottom:10px;
+}
+
+.hero p{
+    font-size:17px;
+    color:#ddd;
+}
+
+
+/* =========================
+   PRODUCTS
+========================= */
+
+.products-section{
+    width:95%;
+    max-width:1100px;
+
+    margin:30px auto;
+}
+
+.section-title{
+    font-size:26px;
+    margin-bottom:20px;
+}
+
+.product-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(260px,1fr)
+        );
+
+    gap:20px;
+}
+
+.product-card{
+    background:white;
+
+    border-radius:16px;
+
+    padding:20px;
+
+    box-shadow:
+        0 5px 20px rgba(0,0,0,.07);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.product-card:hover{
+    transform:translateY(-4px);
+
+    box-shadow:
+        0 10px 25px rgba(0,0,0,.12);
+}
+
+.product-image{
+    width:100%;
+    height:280px;
+
+    object-fit:contain;
+
+    border-radius:12px;
+
+    background:#fafafa;
+
+    margin-bottom:15px;
+}
+
+.product-name{
+    font-size:20px;
+    font-weight:bold;
+
+    margin-bottom:8px;
+}
+
+.product-description{
+    color:#666;
+
+    font-size:14px;
+
+    line-height:1.5;
+
+    margin-bottom:15px;
+}
+
+.form-group{
+    margin-bottom:14px;
+}
+
+.form-group label{
+    display:block;
+
+    font-weight:bold;
+
+    margin-bottom:6px;
+}
+
+.form-group select{
+    width:100%;
+
+    padding:11px;
+
+    border:1px solid #ddd;
+
+    border-radius:8px;
+
+    background:white;
+
+    font-size:14px;
+}
+
+.price{
+    font-size:23px;
+
+    font-weight:bold;
+
+    margin:15px 0;
+}
+
+.product-buttons{
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:10px;
+}
+
+.add-btn{
+    background:#111;
+    color:white;
+
+    border:none;
+
+    padding:12px;
+
+    border-radius:9px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+}
+
+.buy-btn{
+    background:#198754;
+    color:white;
+
+    border:none;
+
+    padding:12px;
+
+    border-radius:9px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+}
+
+.add-btn:hover{
+    background:#333;
+}
+
+.buy-btn:hover{
+    background:#157347;
+}
+
+
+/* =========================
+   CATEGORY NAVIGATION
+========================= */
+.category-section{
+    width:95%;
+    max-width:1100px;
+    margin:25px auto 30px;
+}
+.category-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
+    gap:14px;
+}
+.category-card{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    min-height:125px;
+    padding:18px 12px;
+    background:#fff;
+    color:#111;
+    text-decoration:none;
+    text-align:center;
+    border:1px solid #e5e5e5;
+    border-radius:14px;
+    box-shadow:0 4px 14px rgba(0,0,0,.05);
+    transition:transform .2s ease,background .2s ease,color .2s ease;
+}
+.category-card span{font-size:31px;}
+.category-card strong{font-size:15px;}
+.category-card:hover,.category-card.active{
+    background:#111;
+    color:#fff;
+    transform:translateY(-2px);
+}
+.category-empty{
+    display:none;
+    grid-column:1/-1;
+    text-align:center;
+    padding:35px 15px;
+    color:#666;
+    background:#fff;
+    border-radius:12px;
+}
+
+/* =========================
+   CART MODAL
+========================= */
+
+#cartOverlay{
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.65);
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    z-index:4000;
+
+    padding:15px;
+}
+
+.cart-box{
+    width:100%;
+    max-width:650px;
+
+    max-height:90vh;
+
+    overflow-y:auto;
+
+    background:white;
+
+    border-radius:16px;
+
+    padding:22px;
+}
+
+.cart-header{
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    margin-bottom:20px;
+}
+
+.cart-header h2{
+    font-size:24px;
+}
+
+.close-btn{
+    width:36px;
+    height:36px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#eee;
+
+    cursor:pointer;
+
+    font-size:20px;
+}
+
+.cart-item{
+    border:1px solid #eee;
+
+    border-radius:10px;
+
+    padding:14px;
+
+    margin-bottom:10px;
+}
+
+.cart-item-top{
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:10px;
+
+    font-weight:bold;
+}
+
+.cart-item-details{
+    color:#666;
+
+    font-size:14px;
+
+    margin-top:6px;
+
+    line-height:1.5;
+}
+
+.quantity-controls{
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    margin-top:10px;
+}
+
+.quantity-controls button{
+    width:32px;
+    height:32px;
+
+    border:none;
+
+    border-radius:6px;
+
+    background:#111;
+
+    color:white;
+
+    cursor:pointer;
+
+    font-weight:bold;
+}
+
+.quantity-number{
+    min-width:30px;
+
+    text-align:center;
+
+    font-weight:bold;
+}
+
+.remove-btn{
+    background:#dc3545 !important;
+}
+
+.cart-summary{
+    border-top:2px solid #eee;
+
+    margin-top:15px;
+
+    padding-top:15px;
+}
+
+.summary-row{
+    display:flex;
+
+    justify-content:space-between;
+
+    padding:7px 0;
+}
+
+.summary-row.total{
+    font-size:21px;
+
+    font-weight:bold;
+
+    border-top:1px solid #eee;
+
+    margin-top:7px;
+
+    padding-top:12px;
+}
+
+.cart-actions{
+    display:flex;
+
+    gap:10px;
+
+    margin-top:20px;
+}
+
+.clear-btn{
+    flex:1;
+
+    background:#dc3545;
+
+    color:white;
+
+    border:none;
+
+    padding:12px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+}
+
+.payment-btn{
+    flex:2;
+
+    background:#198754;
+
+    color:white;
+
+    border:none;
+
+    padding:12px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+}
+
+
+/* =========================
+   EMPTY CART
+========================= */
+
+.empty-cart{
+    text-align:center;
+
+    padding:40px 20px;
+
+    color:#777;
+}
+
+.empty-cart-icon{
+    font-size:50px;
+
+    margin-bottom:10px;
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+#toast{
+    position:fixed;
+
+    bottom:25px;
+    left:50%;
+
+    transform:
+        translateX(-50%)
+        translateY(100px);
+
+    background:#111;
+
+    color:white;
+
+    padding:13px 20px;
+
+    border-radius:9px;
+
+    z-index:6000;
+
+    opacity:0;
+
+    transition:
+        all .3s ease;
+
+    font-weight:bold;
+}
+
+#toast.show{
+    opacity:1;
+
+    transform:
+        translateX(-50%)
+        translateY(0);
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    text-align:center;
+
+    color:#777;
+
+    padding:35px 10px;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:700px){
+
+    header{
+        padding:10px;
+    }
+
+    .brand{
+        font-size:18px;
+    }
+
+    .logo{
+        width:38px;
+        height:38px;
+    }
+
+    .header-buttons{
+        gap:5px;
+    }
+
+    .header-buttons button{
+        padding:8px 9px;
+
+        font-size:11px;
+    }
+
+    .hero{
+        padding:35px 20px;
+    }
+
+    .hero h1{
+        font-size:28px;
+    }
+
+    .hero p{
+        font-size:14px;
+    }
+
+    .product-buttons{
+        grid-template-columns:1fr;
+    }
+
+    .cart-actions{
+        flex-direction:column;
+    }
+
+    .cart-item-top{
+        flex-direction:column;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     WELCOME POPUP
+========================= -->
+
+<div id="welcomeOverlay">
+
+    <div class="welcome-box">
+
+        <img
+            src="cartello-logo.png"
+            class="welcome-logo"
+            alt="Cartello Logo">
+
+        <h1>
+            Welcome to CARTELLO
+        </h1>
+
+        <p>
+            Thank you for visiting Cartello.
+            Choose your products and place your order easily.
+        </p>
+
+        <button
+            class="continue-btn"
+            onclick="closeWelcome()">
+
+            Continue Shopping
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header>
+
+    <div class="header-left">
+
+        <img
+            src="cartello-logo.png"
+            class="logo"
+            alt="Cartello Logo">
+
+        <div class="brand">
+            CARTELLO
+        </div>
+
+    </div>
+
+
+    <div class="header-buttons">
+
+        <!-- CUSTOMER DASHBOARD -->
+
+        <button
+            class="dashboard-btn"
+            onclick="goToDashboard()">
+
+            👤 My Account
+
+        </button>
+
+
+        <!-- CART -->
+
+        <button
+            class="cart-btn"
+            onclick="openCart()">
+
+            🛒 Cart
+            <span id="cartCount">
+                0
+            </span>
+
+        </button>
+
+
+        <!-- LOGOUT -->
+
+        <button
+            class="logout-btn"
+            onclick="logout()">
+
+            Logout
+
+        </button>
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================
+     HERO
+========================= -->
+
+<section class="hero">
+
+    <h1>
+        Welcome to CARTELLO
+    </h1>
+
+    <p>
+        Quality products. Easy ordering. Islandwide delivery.
+    </p>
+
+</section>
+
+
+<!-- =========================
+     SHOP BY CATEGORY
+========================= -->
+<section class="category-section">
+    <h2 class="section-title">🛍️ Shop by Category</h2>
+    <div class="category-grid">
+        <a class="category-card" data-category-link="all" href="home.html?category=all"><span>🛒</span><strong>All Products</strong></a>
+        <a class="category-card" data-category-link="books" href="home.html?category=books"><span>📚</span><strong>Books</strong></a>
+        <a class="category-card" data-category-link="packaging" href="home.html?category=packaging"><span>📦</span><strong>Packaging Items</strong></a>
+        <a class="category-card" data-category-link="electronics" href="home.html?category=electronics"><span>🔌</span><strong>Electronics</strong></a>
+    </div>
+</section>
+
+
+<!-- =========================
+     PRODUCTS
+========================= -->
+
+<section class="products-section">
+
+    <h2 class="section-title">
+        📚 Our Products
+    </h2>
+
+
+    <div class="product-grid">
+
+
+        <!-- BIO MASTERLIST -->
+
+        <div class="product-card" data-category="books">
+
+            <img
+                src="New Project.png"
+                class="product-image"
+                alt="Bio Masterlist Book">
+
+
+            <div class="product-name">
+
+                Bio Masterlist Book
+
+            </div>
+
+
+            <div class="product-description">
+
+                G.C.E. Advanced Level Biology
+                study checklist.
+
+                <br><br>
+
+                Available in Sinhala Medium
+                and English Medium.
+
+            </div>
+
+
+            <!-- MEDIUM -->
+
+            <div class="form-group">
+
+                <label for="medium">
+
+                    Medium
+
+                </label>
+
+
+                <select
+                    id="medium"
+                    onchange="updateProductPrice()">
+
+                    <option
+                        value="Sinhala Medium"
+                        data-price="600">
+
+                        Sinhala Medium -
+                        Rs.600/=
+
+                    </option>
+
+
+                    <option
+                        value="English Medium"
+                        data-price="700">
+
+                        English Medium -
+                        Rs.700/=
+
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- QUANTITY -->
+
+            <div class="form-group">
+
+                <label for="quantity">
+
+                    Quantity
+
+                </label>
+
+
+                <select
+                    id="quantity"
+                    onchange="updateProductPrice()">
+
+                    <option value="1">
+                        1
+                    </option>
+
+                    <option value="2">
+                        2
+                    </option>
+
+                    <option value="3">
+                        3
+                    </option>
+
+                    <option value="4">
+                        4
+                    </option>
+
+                    <option value="5">
+                        5
+                    </option>
+
+                    <option value="6">
+                        6
+                    </option>
+
+                    <option value="7">
+                        7
+                    </option>
+
+                    <option value="8">
+                        8
+                    </option>
+
+                    <option value="9">
+                        9
+                    </option>
+
+                    <option value="10">
+                        10
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- PRICE -->
+
+            <div
+                class="price"
+                id="productPrice">
+
+                Rs.600/=
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="product-buttons">
+
+                <button
+                    class="add-btn"
+                    onclick="addToCart()">
+
+                    🛒 Add to Cart
+
+                </button>
+
+
+                <button
+                    class="buy-btn"
+                    onclick="buyNow()">
+
+                    ⚡ Buy Now
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- BUBBLE WRAP PRODUCTS -->
+        <div class="product-card" data-category="packaging">
+            <img src="bubble-wrap.png" class="product-image" alt="Bubble Wrap 50 Meter x 4 Feet">
+            <div class="product-name">Bubble Wrap - 50 Meter × 4 Feet</div>
+            <div class="product-description">Premium quality bubble wrap for packing, moving, storage and product protection.</div>
+            <div class="price">Rs.4,400/=</div>
+            <p style="color:#198754;font-weight:bold;margin-bottom:15px;">🚚 Delivery: Rs.590/=</p>
+            <div class="product-buttons">
+                <button class="add-btn" onclick="addBubbleToCart('Bubble Wrap - 50 Meter × 4 Feet',4400,590)">🛒 Add to Cart</button>
+                <button class="buy-btn" onclick="buyBubbleNow('Bubble Wrap - 50 Meter × 4 Feet',4400,590)">⚡ Buy Now</button>
+            </div>
+        </div>
+
+        <div class="product-card" data-category="packaging">
+            <img src="bubble-wrap.png" class="product-image" alt="Bubble Wrap 50 Meter x 3 Feet">
+            <div class="product-name">Bubble Wrap - 50 Meter × 3 Feet</div>
+            <div class="product-description">Premium quality bubble wrap for packing, moving, storage and product protection.</div>
+            <div class="price">Rs.3,900/=</div>
+            <p style="color:#198754;font-weight:bold;margin-bottom:15px;">🚚 Delivery: Rs.510/=</p>
+            <div class="product-buttons">
+                <button class="add-btn" onclick="addBubbleToCart('Bubble Wrap - 50 Meter × 3 Feet',3900,510)">🛒 Add to Cart</button>
+                <button class="buy-btn" onclick="buyBubbleNow('Bubble Wrap - 50 Meter × 3 Feet',3900,510)">⚡ Buy Now</button>
+            </div>
+        </div>
+
+        <div class="product-card" data-category="packaging">
+            <img src="bubble-wrap.png" class="product-image" alt="Bubble Wrap 50 Meter x 2 Feet">
+            <div class="product-name">Bubble Wrap - 50 Meter × 2 Feet</div>
+            <div class="product-description">Premium quality bubble wrap for packing, moving, storage and product protection.</div>
+            <div class="price">Rs.2,700/=</div>
+            <p style="color:#198754;font-weight:bold;margin-bottom:15px;">🚚 Delivery: Rs.430/=</p>
+            <div class="product-buttons">
+                <button class="add-btn" onclick="addBubbleToCart('Bubble Wrap - 50 Meter × 2 Feet',2700,430)">🛒 Add to Cart</button>
+                <button class="buy-btn" onclick="buyBubbleNow('Bubble Wrap - 50 Meter × 2 Feet',2700,430)">⚡ Buy Now</button>
+            </div>
+        </div>
+
+        <div class="product-card" data-category="packaging">
+            <img src="bubble-wrap.png" class="product-image" alt="Bubble Wrap 50 Meter x 1 Feet">
+            <div class="product-name">Bubble Wrap - 50 Meter × 1 Feet</div>
+            <div class="product-description">Premium quality bubble wrap for packing, moving, storage and product protection.</div>
+            <div class="price">Rs.1,800/=</div>
+            <p style="color:#198754;font-weight:bold;margin-bottom:15px;">🚚 Delivery: Rs.350/=</p>
+            <div class="product-buttons">
+                <button class="add-btn" onclick="addBubbleToCart('Bubble Wrap - 50 Meter × 1 Feet',1800,350)">🛒 Add to Cart</button>
+                <button class="buy-btn" onclick="buyBubbleNow('Bubble Wrap - 50 Meter × 1 Feet',1800,350)">⚡ Buy Now</button>
+            </div>
+        </div>
+
+        <div id="categoryEmptyMessage" class="category-empty">
+            No products in this category yet. Please check back soon.
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     CART MODAL
+========================= -->
+
+<div
+    id="cartOverlay"
+    onclick="closeCartOutside(event)">
+
+    <div
+        class="cart-box"
+        onclick="event.stopPropagation()">
+
+
+        <div class="cart-header">
+
+            <h2>
+                🛒 Your Cart
+            </h2>
+
+
+            <button
+                class="close-btn"
+                onclick="closeCart()">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <div id="cartItems">
+
+            <!-- CART ITEMS -->
+
+        </div>
+
+
+        <div
+            id="cartSummary"
+            style="display:none;">
+
+            <div class="cart-summary">
+
+
+                <div class="summary-row">
+
+                    <span>
+                        Subtotal
+                    </span>
+
+                    <span id="cartSubtotal">
+                        Rs.0/=
+                    </span>
+
+                </div>
+
+
+                <div class="summary-row">
+
+                    <span>
+                        Delivery
+                    </span>
+
+                    <span id="cartDelivery">
+                        Rs.0/=
+                    </span>
+
+                </div>
+
+
+                <div class="summary-row total">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <span id="cartTotal">
+                        Rs.0/=
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="cart-actions">
+
+                <button
+                    class="clear-btn"
+                    onclick="clearCart()">
+
+                    🗑️ Clear Cart
+
+                </button>
+
+
+                <button
+                    class="payment-btn"
+                    onclick="proceedToPayment()">
+
+                    Proceed to Payment →
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================
+     TOAST
+========================= -->
+
+<div id="toast">
+    Added to cart
+</div>
+
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+    © 2026 CARTELLO. All Rights Reserved.
+
+</footer>
+
+
+
+<script>
+
+
+/* ==========================================
+   CART
+========================================== */
+
+let cart = [];
+
+
+/* ==========================================
+   LOAD CART
+========================================== */
+
+function loadCart(){
+
+    try{
+
+        const saved =
+            localStorage.getItem(
+                "cartelloCart"
+            );
+
+
+        if(saved){
+
+            const parsed =
+                JSON.parse(saved);
+
+
+            if(Array.isArray(parsed)){
+
+                cart = parsed;
+
+            }
+
+        }
+
+    }
+
+    catch(error){
+
+        console.error(
+            "Cart load error:",
+            error
+        );
+
+        cart = [];
+
+    }
+
+
+    updateCartCount();
+
+}
+
+
+/* ==========================================
+   SAVE CART
+========================================== */
+
+function saveCart(){
+
+    localStorage.setItem(
+        "cartelloCart",
+        JSON.stringify(cart)
+    );
+
+
+    updateCartCount();
+
+}
+
+
+/* ==========================================
+   CART COUNT
+========================================== */
+
+function updateCartCount(){
+
+    let count = 0;
+
+
+    cart.forEach(
+        function(item){
+
+            count += Number(
+                item.quantity || 0
+            );
+
+        }
+    );
+
+
+    document.getElementById(
+        "cartCount"
+    ).textContent = count;
+
+}
+
+
+/* ==========================================
+   PRODUCT PRICE
+========================================== */
+
+function updateProductPrice(){
+
+    const medium =
+        document.getElementById(
+            "medium"
+        );
+
+
+    const quantity =
+        document.getElementById(
+            "quantity"
+        );
+
+
+    const selected =
+        medium.options[
+            medium.selectedIndex
+        ];
+
+
+    const price =
+        Number(
+            selected.dataset.price
+        );
+
+
+    const qty =
+        Number(
+            quantity.value
+        );
+
+
+    const total =
+        price * qty;
+
+
+    document.getElementById(
+        "productPrice"
+    ).textContent =
+        "Rs." +
+        total.toLocaleString() +
+        "/=";
+
+}
+
+
+/* ==========================================
+   GET PRODUCT
+========================================== */
+
+function getSelectedProduct(){
+
+    const mediumElement =
+        document.getElementById(
+            "medium"
+        );
+
+
+    const quantityElement =
+        document.getElementById(
+            "quantity"
+        );
+
+
+    const selected =
+        mediumElement.options[
+            mediumElement.selectedIndex
+        ];
+
+
+    const medium =
+        mediumElement.value;
+
+
+    const price =
+        Number(
+            selected.dataset.price
+        );
+
+
+    const quantity =
+        Number(
+            quantityElement.value
+        );
+
+
+    return {
+
+        product:
+            "Bio Masterlist Book",
+
+        medium:
+            medium,
+
+        price:
+            price,
+
+        quantity:
+            quantity
+
+    };
+
+}
+
+
+/* ==========================================
+   ADD TO CART
+========================================== */
+
+function addToCart(){
+
+    const product =
+        getSelectedProduct();
+
+
+    const existing =
+        cart.find(
+            function(item){
+
+                return (
+                    item.product ===
+                    product.product
+                    &&
+                    item.medium ===
+                    product.medium
+                );
+
+            }
+        );
+
+
+    if(existing){
+
+        existing.quantity +=
+            product.quantity;
+
+    }
+
+    else{
+
+        cart.push(
+            product
+        );
+
+    }
+
+
+    saveCart();
+
+
+    showToast(
+        "🛒 Added to cart successfully!"
+    );
+
+}
+
+
+/* ==========================================
+   BUY NOW
+========================================== */
+
+function buyNow(){
+
+    const product =
+        getSelectedProduct();
+
+
+    cart = [
+        product
+    ];
+
+
+    saveCart();
+
+
+    openCart();
+
+}
+
+
+function addBubbleToCart(name, price, deliveryFee){
+    const existing = cart.find(function(item){ return item.product === name; });
+    if(existing){
+        existing.quantity = Number(existing.quantity || 0) + 1;
+    } else {
+        cart.push({ product:name, medium:"50 Meter", price:Number(price), quantity:1, deliveryFee:Number(deliveryFee) });
+    }
+    saveCart();
+    showToast("🛒 Added to cart successfully!");
+}
+
+function buyBubbleNow(name, price, deliveryFee){
+    cart = [{ product:name, medium:"50 Meter", price:Number(price), quantity:1, deliveryFee:Number(deliveryFee) }];
+    saveCart();
+    openCart();
+}
+
+/* ==========================================
+   DELIVERY
+========================================== */
+
+function calculateDelivery(){
+    let bookQuantity = 0;
+    let bubbleDelivery = 0;
+
+    cart.forEach(function(item){
+        const qty = Number(item.quantity || 0);
+        if (Number(item.deliveryFee || 0) > 0) {
+            bubbleDelivery += Number(item.deliveryFee) * qty;
+        } else {
+            bookQuantity += qty;
+        }
+    });
+
+    let bookDelivery = 0;
+    if (bookQuantity === 1) bookDelivery = 200;
+    else if (bookQuantity === 2) bookDelivery = 350;
+    else if (bookQuantity >= 3) bookDelivery = 450;
+
+    return bookDelivery + bubbleDelivery;
+}
+
+
+/* ==========================================
+   OPEN CART
+========================================== */
+
+function openCart(){
+
+    document.getElementById(
+        "cartOverlay"
+    ).style.display =
+        "flex";
+
+
+    renderCart();
+
+}
+
+
+/* ==========================================
+   CLOSE CART
+========================================== */
+
+function closeCart(){
+
+    document.getElementById(
+        "cartOverlay"
+    ).style.display =
+        "none";
+
+}
+
+
+/* ==========================================
+   CLOSE CART OUTSIDE
+========================================== */
+
+function closeCartOutside(event){
+
+    if(
+        event.target.id ===
+        "cartOverlay"
+    ){
+
+        closeCart();
+
+    }
+
+}
+
+
+/* ==========================================
+   RENDER CART
+========================================== */
+
+function renderCart(){
+
+    const container =
+        document.getElementById(
+            "cartItems"
+        );
+
+
+    const summary =
+        document.getElementById(
+            "cartSummary"
+        );
+
+
+    if(
+        !cart ||
+        cart.length === 0
+    ){
+
+        container.innerHTML = `
+
+            <div class="empty-cart">
+
+                <div class="empty-cart-icon">
+                    🛒
+                </div>
+
+                <h3>
+                    Your cart is empty
+                </h3>
+
+                <p style="margin-top:8px;">
+
+                    Add some products to your cart.
+
+                </p>
+
+            </div>
+
+        `;
+
+
+        summary.style.display =
+            "none";
+
+
+        return;
+
+    }
+
+
+    let html = "";
+
+
+    let subtotal = 0;
+
+
+    cart.forEach(
+        function(item,index){
+
+            const price =
+                Number(
+                    item.price || 0
+                );
+
+
+            const quantity =
+                Number(
+                    item.quantity || 1
+                );
+
+
+            const itemTotal =
+                price *
+                quantity;
+
+
+            subtotal +=
+                itemTotal;
+
+
+            html += `
+
+                <div class="cart-item">
+
+
+                    <div class="cart-item-top">
+
+                        <span>
+
+                            ${escapeHtml(
+                                item.product
+                            )}
+
+                        </span>
+
+
+                        <span>
+
+                            Rs.
+                            ${itemTotal.toLocaleString()}
+                            /=
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="cart-item-details">
+
+                        Medium:
+                        ${escapeHtml(
+                            item.medium
+                        )}
+
+                        <br>
+
+                        Unit Price:
+                        Rs.
+                        ${price.toLocaleString()}
+                        /=
+
+                    </div>
+
+
+                    <div class="quantity-controls">
+
+
+                        <button
+                            onclick="changeQuantity(
+                                ${index},
+                                -1
+                            )">
+
+                            −
+
+                        </button>
+
+
+                        <span
+                            class="quantity-number">
+
+                            ${quantity}
+
+                        </span>
+
+
+                        <button
+                            onclick="changeQuantity(
+                                ${index},
+                                1
+                            )">
+
+                            +
+
+                        </button>
+
+
+                        <button
+                            class="remove-btn"
+                            onclick="removeCartItem(
+                                ${index}
+                            )">
+
+                            🗑️
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    container.innerHTML =
+        html;
+
+
+    const delivery =
+        calculateDelivery();
+
+
+    const total =
+        subtotal +
+        delivery;
+
+
+    document.getElementById(
+        "cartSubtotal"
+    ).textContent =
+        "Rs." +
+        subtotal.toLocaleString() +
+        "/=";
+
+
+    document.getElementById(
+        "cartDelivery"
+    ).textContent =
+        "Rs." +
+        delivery.toLocaleString() +
+        "/=";
+
+
+    document.getElementById(
+        "cartTotal"
+    ).textContent =
+        "Rs." +
+        total.toLocaleString() +
+        "/=";
+
+
+    summary.style.display =
+        "block";
+
+}
+
+
+/* ==========================================
+   CHANGE QUANTITY
+========================================== */
+
+function changeQuantity(
+    index,
+    change
+){
+
+    if(
+        !cart[index]
+    ){
+
+        return;
+
+    }
+
+
+    cart[index].quantity =
+        Number(
+            cart[index].quantity
+        ) +
+        change;
+
+
+    if(
+        cart[index].quantity <= 0
+    ){
+
+        cart.splice(
+            index,
+            1
+        );
+
+    }
+
+
+    saveCart();
+
+
+    renderCart();
+
+}
+
+
+/* ==========================================
+   REMOVE ITEM
+========================================== */
+
+function removeCartItem(index){
+
+    cart.splice(
+        index,
+        1
+    );
+
+
+    saveCart();
+
+
+    renderCart();
+
+
+    showToast(
+        "Item removed from cart."
+    );
+
+}
+
+
+/* ==========================================
+   CLEAR CART
+========================================== */
+
+function clearCart(){
+
+    if(
+        cart.length === 0
+    ){
+
+        return;
+
+    }
+
+
+    const confirmClear =
+        confirm(
+            "Are you sure you want to clear the cart?"
+        );
+
+
+    if(!confirmClear){
+
+        return;
+
+    }
+
+
+    cart = [];
+
+
+    saveCart();
+
+
+    renderCart();
+
+
+    showToast(
+        "Cart cleared."
+    );
+
+}
+
+
+/* ==========================================
+   PROCEED TO PAYMENT
+========================================== */
+
+function proceedToPayment(){
+
+    if(
+        !cart ||
+        cart.length === 0
+    ){
+
+        alert(
+            "Your cart is empty."
+        );
+
+        return;
+
+    }
+
+
+    let subtotal = 0;
+
+
+    cart.forEach(
+        function(item){
+
+            subtotal +=
+                Number(
+                    item.price || 0
+                ) *
+                Number(
+                    item.quantity || 0
+                );
+
+        }
+    );
+
+
+    const delivery =
+        calculateDelivery();
+
+
+    const total =
+        subtotal +
+        delivery;
+
+
+    const orderId =
+        "CT" +
+        Date.now();
+
+
+    const order = {
+
+        id:
+            orderId,
+
+        orderId:
+            orderId,
+
+        items:
+            cart,
+
+        subtotal:
+            subtotal,
+
+        delivery:
+            delivery,
+
+        total:
+            total,
+
+        product:
+            cart[0]
+            ?
+            cart[0].product
+            :
+            "",
+
+        medium:
+            cart[0]
+            ?
+            cart[0].medium
+            :
+            "",
+
+        quantity:
+            cart.reduce(
+                function(total,item){
+
+                    return total +
+                        Number(
+                            item.quantity || 0
+                        );
+
+                },
+                0
+            ),
+
+        price:
+            cart[0]
+            ?
+            cart[0].price
+            :
+            0
+
+    };
+
+
+    localStorage.setItem(
+        "cartelloOrder",
+        JSON.stringify(
+            order
+        )
+    );
+
+
+    window.location.href =
+        "checkout.html";
+
+}
+
+
+/* ==========================================
+   CUSTOMER DASHBOARD
+========================================== */
+
+function goToDashboard(){
+
+    const loggedIn =
+        localStorage.getItem(
+            "cartelloLoggedIn"
+        );
+
+
+    const userType =
+        localStorage.getItem(
+            "cartelloUserType"
+        );
+
+
+    if(
+        loggedIn === "true"
+        &&
+        userType === "customer"
+    ){
+
+        window.location.href =
+            "customer-dashboard.html";
+
+    }
+
+    else{
+
+        alert(
+            "Please login to view your account."
+        );
+
+
+        window.location.href =
+            "index.html";
+
+    }
+
+}
+
+
+/* ==========================================
+   LOGOUT
+========================================== */
+
+function logout(){
+
+    const confirmLogout =
+        confirm(
+            "Are you sure you want to logout?"
+        );
+
+
+    if(!confirmLogout){
+
+        return;
+
+    }
+
+
+    localStorage.removeItem(
+        "cartelloLoggedIn"
+    );
+
+
+    localStorage.removeItem(
+        "cartelloUserType"
+    );
+
+
+    localStorage.removeItem(
+        "cartelloCurrentCustomer"
+    );
+
+
+    window.location.replace(
+        "index.html"
+    );
+
+}
+
+
+/* ==========================================
+   WELCOME POPUP
+========================================== */
+
+function showWelcome(){
+
+    document.getElementById(
+        "welcomeOverlay"
+    ).classList.add(
+        "show"
+    );
+
+}
+
+
+function closeWelcome(){
+
+    document.getElementById(
+        "welcomeOverlay"
+    ).classList.remove(
+        "show"
+    );
+
+}
+
+
+/* ==========================================
+   TOAST
+========================================== */
+
+function showToast(
+    message
+){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    toast.textContent =
+        message;
+
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    setTimeout(
+        function(){
+
+            toast.classList.remove(
+                "show"
+            );
+
+        },
+        2500
+    );
+
+}
+
+
+/* ==========================================
+   ESCAPE HTML
+========================================== */
+
+function escapeHtml(
+    value
+){
+
+    return String(
+        value ?? ""
+    )
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    )
+
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+/* ==========================================
+   LOGIN CHECK
+========================================== */
+
+function checkLogin(){
+
+    const loggedIn =
+        localStorage.getItem(
+            "cartelloLoggedIn"
+        );
+
+
+    const userType =
+        localStorage.getItem(
+            "cartelloUserType"
+        );
+
+
+    if(
+        loggedIn !== "true"
+        ||
+        userType !== "customer"
+    ){
+
+        window.location.replace(
+            "index.html"
+        );
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
+/* ==========================================
+   CATEGORY PAGE FILTER
+========================================== */
+
+function loadCategoryPage(){
+    const params = new URLSearchParams(window.location.search);
+    const requested = (params.get("category") || "all").toLowerCase();
+    const allowed = ["all", "books", "packaging", "electronics"];
+    const category = allowed.includes(requested) ? requested : "all";
+
+    const titles = {
+        all: "🛍️ All Products",
+        books: "📚 Books",
+        packaging: "📦 Packaging Items",
+        electronics: "🔌 Electronics"
+    };
+
+    const title = document.querySelector(".products-section .section-title");
+    if(title) title.textContent = titles[category];
+
+    let visible = 0;
+    document.querySelectorAll(".product-grid .product-card").forEach(function(card){
+        const matches = category === "all" || card.dataset.category === category;
+        card.style.display = matches ? "" : "none";
+        if(matches) visible++;
+    });
+
+    document.querySelectorAll("[data-category-link]").forEach(function(link){
+        const active = link.dataset.categoryLink === category;
+        link.classList.toggle("active", active);
+        if(active) link.setAttribute("aria-current", "page");
+        else link.removeAttribute("aria-current");
+    });
+
+    const empty = document.getElementById("categoryEmptyMessage");
+    if(empty){
+        empty.style.display = visible === 0 ? "block" : "none";
+        empty.textContent = category === "electronics"
+            ? "Electronics products will be added soon."
+            : "No products in this category yet.";
+    }
+}
+
+/* ==========================================
+   START
+========================================== */
+
+if(
+    checkLogin()
+){
+
+    loadCategoryPage();
+
+    loadCart();
+
+    updateProductPrice();
+
+    setTimeout(
+        function(){
+
+            showWelcome();
+
+        },
+        300
+    );
+
+}
+
+</script>
+
+
+</body>
+
+</html>

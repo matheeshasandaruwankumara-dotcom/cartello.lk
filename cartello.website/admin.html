@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartello Admin</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}body{background:#f3f4f6;color:#111827}.sidebar{position:fixed;left:0;top:0;width:230px;height:100vh;background:#111827;color:white;padding:20px;z-index:1000}.sidebar h2{margin-bottom:25px}.sidebar button{width:100%;padding:13px;margin-bottom:8px;border:0;border-radius:8px;background:#1f2937;color:white;text-align:left;cursor:pointer;font-size:15px}.sidebar button:hover{background:#374151}.sidebar .logout{background:#dc2626;margin-top:20px}.main{margin-left:230px;padding:30px}.section{display:none}.section.active{display:block}.card{background:white;padding:20px;border-radius:15px;margin-bottom:20px;box-shadow:0 4px 15px rgba(0,0,0,.06)}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin:25px 0}.stat{background:white;padding:22px;border-radius:15px;box-shadow:0 4px 15px rgba(0,0,0,.06)}.stat-icon{font-size:30px;margin-bottom:10px}.stat p{color:#6b7280;font-size:14px}.stat h2{margin-top:7px;font-size:25px}.add-btn{background:#111827;color:white;border:0;padding:12px 18px;border-radius:8px;cursor:pointer}table{width:100%;border-collapse:collapse;margin-top:20px}th,td{padding:12px;border-bottom:1px solid #eee;text-align:left}th{background:#f9fafb}.table-wrap{overflow-x:auto}.product-img{width:60px;height:60px;object-fit:contain}.edit-btn{background:#2563eb;color:white;border:0;padding:7px 10px;border-radius:6px;cursor:pointer}.delete-btn{background:#dc2626;color:white;border:0;padding:7px 10px;border-radius:6px;cursor:pointer}.approve-btn{background:#16a34a;color:white;border:0;padding:8px 12px;border-radius:6px;cursor:pointer;margin:3px}.reject-btn{background:#dc2626;color:white;border:0;padding:8px 12px;border-radius:6px;cursor:pointer;margin:3px}.slip-btn{background:#2563eb;color:white;border:0;padding:8px 12px;border-radius:6px;cursor:pointer;margin:3px}.order-card{background:white;padding:20px;border-radius:12px;margin-bottom:15px;box-shadow:0 3px 12px rgba(0,0,0,.05)}.order-header{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:15px}.order-items{background:#f9fafb;padding:12px;border-radius:8px;margin:10px 0}.status{font-weight:bold}.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);justify-content:center;align-items:center;z-index:2000;padding:20px}.modal-box{background:white;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;padding:25px;border-radius:15px}.modal-box label{display:block;font-weight:bold;margin-top:10px}.modal-box input,.modal-box textarea,.modal-box select{width:100%;padding:11px;margin-top:6px;border:1px solid #ccc;border-radius:7px}.save-btn{background:#16a34a;color:white;border:0;padding:12px 20px;border-radius:8px;cursor:pointer;margin-top:15px}.close-btn{background:#6b7280;color:white;border:0;padding:12px 20px;border-radius:8px;cursor:pointer;margin-left:5px}.customer-card{background:white;padding:18px;border-radius:12px;margin-bottom:12px;box-shadow:0 3px 10px rgba(0,0,0,.05)}
+@media(max-width:700px){.sidebar{width:190px;padding:15px}.main{margin-left:190px;padding:15px}.stats{grid-template-columns:1fr}}
+
+/* Cartello eye-comfort dark theme */
+:root{color-scheme:dark}
+body{background:#111318!important;color:#e8eaf0!important}
+.sidebar{background:#090b10!important;border-right:1px solid #252a35}
+.sidebar button{background:#1b202a!important;color:#e8eaf0!important}
+.sidebar button:hover{background:#303847!important}
+.main h1,.main h2,.main h3,.card h1,.card h2{color:#f4f6fb}
+.card,.stat,.order-card,.customer-card,.modal-box{background:#1b1f27!important;color:#e8eaf0!important;border:1px solid #2b313d;box-shadow:0 4px 16px rgba(0,0,0,.18)!important}
+.stat p,.main p{color:#b5bdca!important}
+table{color:#e8eaf0!important}
+th{background:#252b36!important;color:#f4f6fb!important}
+td,th{border-bottom:1px solid #343b48!important}
+.order-items{background:#252b36!important;color:#e8eaf0!important}
+.modal{background:rgba(0,0,0,.82)!important}
+.modal-box label{color:#e8eaf0!important}
+.modal-box input,.modal-box textarea,.modal-box select,input,textarea,select{background:#11151c!important;color:#f4f6fb!important;border:1px solid #414958!important}
+input::placeholder,textarea::placeholder{color:#929bab!important}
+.add-btn{background:#e5e7eb!important;color:#111827!important}
+.status{color:#f3f4f6}
+@media(max-width:700px){.main{padding:14px!important}.sidebar{width:175px!important}.main{margin-left:175px!important}}
+
+</style>
+</head>
+<body>
+<div class="sidebar">
+<h2>🛒 Cartello</h2>
+<button onclick="showSection('dashboard')">📊 Dashboard</button>
+<button onclick="showSection('products')">🛍 Products</button>
+<button onclick="showSection('orders')">📦 Orders</button>
+<button onclick="showSection('customers')">👥 Customers</button>
+<button onclick="logout()" class="logout">🚪 Logout</button>
+</div>
+<div class="main">
+<div id="dashboard" class="section active">
+<h1>📊 Admin Dashboard</h1><p style="color:#6b7280;margin-top:8px;">Cartello Store Management</p>
+<div class="stats">
+<div class="stat"><div class="stat-icon">📦</div><p>Total Orders</p><h2 id="totalOrders">0</h2></div>
+<div class="stat"><div class="stat-icon">💰</div><p>Total Sales</p><h2>Rs.<span id="totalSales">0</span>/=</h2></div>
+<div class="stat"><div class="stat-icon">⏳</div><p>Pending Payments</p><h2 id="pendingOrders">0</h2></div>
+<div class="stat"><div class="stat-icon">✅</div><p>Approved Orders</p><h2 id="approvedOrders">0</h2></div>
+<div class="stat"><div class="stat-icon">❌</div><p>Rejected Orders</p><h2 id="rejectedOrders">0</h2></div>
+<div class="stat"><div class="stat-icon">👥</div><p>Total Customers</p><h2 id="totalCustomers">0</h2></div>
+<div class="stat"><div class="stat-icon">🛍️</div><p>Total Products</p><h2 id="totalProducts">0</h2></div>
+</div><div class="card"><h2>📦 Recent Orders</h2><div id="recentOrders" style="margin-top:15px;">Loading...</div></div>
+</div>
+<div id="products" class="section"><div class="card"><h1>🛍 Products</h1><br><button class="add-btn" onclick="openAddProduct()">+ Add Product</button>
+<div class="table-wrap"><table><thead><tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Medium</th><th>Stock</th><th>Delivery</th><th>Status</th><th>Action</th></tr></thead><tbody id="productTableBody"></tbody></table></div>
+</div></div>
+<div id="orders" class="section"><h1>📦 Orders</h1><div id="ordersList" style="margin-top:20px;">Loading...</div></div>
+<div id="customers" class="section"><h1>👥 Customers</h1><div id="customersList" style="margin-top:20px;">Loading...</div></div>
+</div>
+<div id="productModal" class="modal"><div class="modal-box">
+<h2 id="modalTitle">Add Product</h2><input type="hidden" id="productId">
+<label>Product Name</label><input type="text" id="productName" placeholder="Bubble Wrap - 50 Meter × 4 Feet">
+<label>Product Category</label><select id="productCategory" required><option value="books">📚 Books</option><option value="packaging">📦 Packaging</option><option value="electronics">💻 Electronics</option><option value="other">🛒 Other</option></select>
+<label>Description</label><textarea id="productDescription" rows="4" placeholder="Product description"></textarea>
+<label>Image URL</label><input type="text" id="productImage" placeholder="bubble-wrap.png">
+<label>Price</label><input type="number" id="productPrice" placeholder="4400" min="0">
+<label>Medium / Variant</label><input type="text" id="productMedium" placeholder="50 Meter × 4 Feet">
+<label>Stock</label><input type="number" id="productStock" value="0" min="0">
+<label>Delivery Fee</label><input type="number" id="productDelivery" placeholder="590" min="0">
+<label>Status</label><select id="productStatus"><option value="Active">Active</option><option value="Hidden">Hidden</option></select>
+<button class="save-btn" onclick="saveProduct()">Save Product</button><button class="close-btn" onclick="closeProductModal()">Cancel</button>
+</div></div>
+<script>
+const API_URL="https://script.google.com/macros/s/AKfycbzcKrEkPzSjuIzYhHgy3RAeJis_2Xzkz2qLyDH13A0Aty_KpISkYG96yc8NbydKuo2qkQ/exec";
+if(!((localStorage.getItem("cartelloLoggedIn")==="true"&&localStorage.getItem("cartelloUserType")==="admin")||localStorage.getItem("cartelloAdminLoggedIn")==="true")){window.location.replace(window.location.origin+"/index.html");}
+const CATEGORY_LABELS={books:"Books",packaging:"Packaging",electronics:"Electronics",other:"Other"};
+function escapeHTML(value){return String(value??"").replace(/[&<>"']/g,function(ch){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch];});}
+function showSection(id){document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");if(id==="dashboard")loadDashboard();if(id==="products")loadProducts();if(id==="orders")loadOrders();if(id==="customers")loadCustomers();}
+async function loadDashboard(){try{const response=await fetch(API_URL+"?action=getOrders");const result=await response.json();const orders=result.orders||[];document.getElementById("totalOrders").textContent=orders.length;let sales=0,pending=0,approved=0,rejected=0;orders.forEach(order=>{const status=String(order.status||"").toLowerCase();if(status.includes("approved")){approved++;sales+=Number(order.total)||0;}if(status.includes("pending"))pending++;if(status.includes("rejected"))rejected++;});document.getElementById("totalSales").textContent=sales.toLocaleString();document.getElementById("pendingOrders").textContent=pending;document.getElementById("approvedOrders").textContent=approved;document.getElementById("rejectedOrders").textContent=rejected;showRecentOrders(orders);}catch(error){console.error(error);document.getElementById("recentOrders").innerHTML="Could not load orders.";}
+try{const response=await fetch(API_URL+"?action=getProducts");const result=await response.json();document.getElementById("totalProducts").textContent=(result.products||[]).length;}catch(error){console.error(error);}
+try{const response=await fetch(API_URL+"?action=getCustomers");const result=await response.json();document.getElementById("totalCustomers").textContent=(result.customers||[]).length;}catch(error){document.getElementById("totalCustomers").textContent="0";}}
+function showRecentOrders(orders){const box=document.getElementById("recentOrders");if(!orders.length){box.innerHTML="<p>No orders yet.</p>";return;}box.innerHTML=orders.slice().reverse().slice(0,5).map(order=>`<div style="padding:15px 0;border-bottom:1px solid #eee"><strong>${escapeHTML(order.orderId||"")}</strong><br>${escapeHTML(order.name||"")}<br><strong>Rs.${(Number(order.total)||0).toLocaleString()}/=</strong><br>Status: ${escapeHTML(order.status||"Payment Pending")}</div>`).join("");}
+async function loadProducts(){const body=document.getElementById("productTableBody");body.innerHTML="<tr><td colspan='9'>Loading...</td></tr>";try{const response=await fetch(API_URL+"?action=getProducts");const result=await response.json();const products=result.products||[];if(!products.length){body.innerHTML="<tr><td colspan='9'>No products yet.</td></tr>";return;}body.innerHTML="";products.forEach(product=>{const row=document.createElement("tr");const imageCell=document.createElement("td");const img=document.createElement("img");img.src=product.imageUrl||"cartello-logo.png";img.alt=product.name||"Product";img.className="product-img";imageCell.appendChild(img);row.appendChild(imageCell);const values=[product.name||"",CATEGORY_LABELS[product.category]||CATEGORY_LABELS.other,"Rs."+(Number(product.price)||0).toLocaleString()+"/=",product.medium||"-",product.stock||0,"Rs."+(Number(product.deliveryFee)||0).toLocaleString()+"/=",product.status||"Active"];values.forEach(value=>{const td=document.createElement("td");td.textContent=value;row.appendChild(td);});const actions=document.createElement("td");const edit=document.createElement("button");edit.className="edit-btn";edit.textContent="Edit";edit.onclick=()=>editProduct(product);const del=document.createElement("button");del.className="delete-btn";del.textContent="Delete";del.style.marginLeft="5px";del.onclick=()=>deleteProduct(product.productId);actions.append(edit,del);row.appendChild(actions);body.appendChild(row);});}catch(error){console.error(error);body.innerHTML="<tr><td colspan='9'>Error loading products.</td></tr>";}}
+function openAddProduct(){document.getElementById("modalTitle").textContent="Add Product";document.getElementById("productId").value="";document.getElementById("productName").value="";document.getElementById("productCategory").value="other";document.getElementById("productDescription").value="";document.getElementById("productImage").value="";document.getElementById("productPrice").value="";document.getElementById("productMedium").value="";document.getElementById("productStock").value="0";document.getElementById("productDelivery").value="0";document.getElementById("productStatus").value="Active";document.getElementById("productModal").style.display="flex";}
+function editProduct(product){document.getElementById("modalTitle").textContent="Edit Product";document.getElementById("productId").value=product.productId||"";document.getElementById("productName").value=product.name||"";document.getElementById("productCategory").value=product.category||"other";document.getElementById("productDescription").value=product.description||"";document.getElementById("productImage").value=product.imageUrl||"";document.getElementById("productPrice").value=product.price||"";document.getElementById("productMedium").value=product.medium||"";document.getElementById("productStock").value=product.stock||0;document.getElementById("productDelivery").value=product.deliveryFee||0;document.getElementById("productStatus").value=product.status||"Active";document.getElementById("productModal").style.display="flex";}
+async function saveProduct(){const productId=document.getElementById("productId").value;const data={action:productId?"updateProduct":"createProduct",productId:productId,name:document.getElementById("productName").value.trim(),category:document.getElementById("productCategory").value,description:document.getElementById("productDescription").value.trim(),imageUrl:document.getElementById("productImage").value.trim(),price:document.getElementById("productPrice").value,medium:document.getElementById("productMedium").value.trim(),stock:document.getElementById("productStock").value,deliveryFee:document.getElementById("productDelivery").value,status:document.getElementById("productStatus").value};if(!data.name){alert("Please enter product name.");return;}try{const response=await fetch(API_URL,{method:"POST",body:JSON.stringify(data)});const result=await response.json();if(result.success){alert(result.message||"Product saved.");closeProductModal();loadProducts();loadDashboard();}else{alert(result.message||"Something went wrong.");}}catch(error){console.error(error);alert("Error saving product.");}}
+async function deleteProduct(productId){if(!confirm("Delete this product?"))return;try{const response=await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"deleteProduct",productId:productId})});const result=await response.json();alert(result.message||"Request completed.");loadProducts();loadDashboard();}catch(error){console.error(error);alert("Delete failed.");}}
+async function loadOrders(){const box=document.getElementById("ordersList");box.innerHTML="Loading orders...";try{const response=await fetch(API_URL+"?action=getOrders");const result=await response.json();const orders=result.orders||[];if(!orders.length){box.innerHTML="<div class='card'>No orders yet.</div>";return;}box.innerHTML="";orders.slice().reverse().forEach(order=>{const items=Array.isArray(order.items)?order.items.map(item=>`<div>${escapeHTML(item.name||"")} × ${escapeHTML(item.quantity||1)} - Rs.${(Number(item.price)||0).toLocaleString()}</div>`).join(""):"";const card=document.createElement("div");card.className="order-card";card.innerHTML=`<div class="order-header"><div><h3>${escapeHTML(order.orderId||"")}</h3><p>${escapeHTML(order.name||"")}</p><p>${escapeHTML(order.phone||"")}</p><p>${escapeHTML(order.district||"")}</p></div><div><strong>Rs.${(Number(order.total)||0).toLocaleString()}/=</strong><br><span class="status">${escapeHTML(order.status||"Payment Pending")}</span></div></div><div class="order-items"><strong>Items</strong>${items}</div><p>Address: ${escapeHTML(order.address||"")}</p><p>Email: ${escapeHTML(order.email||"")}</p><p>Delivery: Rs.${(Number(order.delivery)||0).toLocaleString()}/=</p><div style="margin-top:12px" class="order-actions"></div>`;const buttons=card.querySelector(".order-actions");if(order.paymentSlipURL){const slip=document.createElement("button");slip.className="slip-btn";slip.textContent="🧾 View Payment Slip";slip.onclick=()=>window.open(order.paymentSlipURL,"_blank");buttons.appendChild(slip);}const approve=document.createElement("button");approve.className="approve-btn";approve.textContent="✅ Approve";approve.onclick=()=>updateStatus(order.orderId,"Payment Approved");const reject=document.createElement("button");reject.className="reject-btn";reject.textContent="❌ Reject";reject.onclick=()=>updateStatus(order.orderId,"Payment Rejected");buttons.append(approve,reject);box.appendChild(card);});}catch(error){console.error(error);box.innerHTML="<div class='card'>Error loading orders.</div>";}}
+async function updateStatus(orderId,status){try{const response=await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"updateStatus",orderId:orderId,status:status})});const result=await response.json();if(result.success){alert(result.message||"Order status updated.");loadOrders();loadDashboard();}else{alert(result.message||"Could not update status.");}}catch(error){console.error(error);alert("Could not update order status.");}}
+async function loadCustomers(){const box=document.getElementById("customersList");box.innerHTML="Loading customers...";try{const response=await fetch(API_URL+"?action=getCustomers");const result=await response.json();const customers=result.customers||[];if(!customers.length){box.innerHTML="<div class='card'>No customers yet.</div>";return;}box.innerHTML=customers.map(customer=>`<div class="customer-card"><h3>${escapeHTML(customer.name||"")}</h3><p>Username: ${escapeHTML(customer.username||"")}</p><p>Phone: ${escapeHTML(customer.phone||"")}</p></div>`).join("");}catch(error){console.error(error);box.innerHTML="<div class='card'>Error loading customers.</div>";}}
+function closeProductModal(){document.getElementById("productModal").style.display="none";}
+function logout(){localStorage.removeItem("cartelloLoggedIn");localStorage.removeItem("cartelloUserType");localStorage.removeItem("cartelloAdminLoggedIn");localStorage.removeItem("cartelloCurrentCustomer");window.location.replace(window.location.origin+"/index.html");}
+window.addEventListener("load",function(){loadDashboard();});
+</script>
+</body>
+</html>
